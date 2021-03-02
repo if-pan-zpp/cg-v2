@@ -1,11 +1,11 @@
-#include "geometry/PDBFile.hpp"
+#include "loaders/PDBFile.hpp"
 #include "math/Types.hpp"
 #include "math/Units.hpp"
 #include <stdexcept>
 #include <map>
 
 using namespace std;
-using namespace geometry;
+using namespace loaders;
 using namespace math;
 
 /* Yield a view of characters i..j (1-indexed) of s.

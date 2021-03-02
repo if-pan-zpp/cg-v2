@@ -6,23 +6,23 @@
 #include <unordered_map>
 #include <optional>
 
-namespace geometry {
+namespace loaders {
     /* PDB file loader */
     class PDBFile {
     public:
         /* Read a PDB file from a given stream. If relevant CRYST1
          * field is present, the crystallographic structure may be
          * unwrapped. */
-        PDBFile(std::istream& file, bool unwrap = false);
+        explicit PDBFile(std::istream& file, bool unwrap = false);
 
     private:
         struct Residue {
             /* We store for each atom only its position */
-            std::unordered_map<std::string, math::Real3> atoms = {};
-            char residue_code = 0;
+            std::unordered_map<std::string, math::Real3> atoms;
+            char residue_code;
         };
         struct Chain {
-            std::vector<Residue> residues = {};
+            std::vector<Residue> residues;
         };
         std::unordered_map<char, Chain> chains;
 

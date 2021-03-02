@@ -7,7 +7,7 @@ add_subdirectory(reference)
 add_executable(main main.cpp)
 target_link_libraries(main PRIVATE Reference)
 
-set(Resources 1ubq.pdb)
-foreach(resource IN LISTS Resources)
-    configure_file(${resource} ${resource} COPYONLY)
-endforeach()
+add_custom_command(
+    TARGET main PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_LIST_DIR}/data $<TARGET_FILE_DIR:main>/data)

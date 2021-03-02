@@ -1,9 +1,7 @@
 #include <iostream>
-#include <fstream>
-#include "geometry/PDBFile.hpp"
+#include "loaders/SequenceFile.hpp"
 
 int main() {
-    auto pdbfile = std::ifstream("1ubq.pdb");
-    auto pdb = geometry::PDBFile(pdbfile);
+    auto seqfile = loaders::SequenceFile("data/example3/glut.txt");
     return EXIT_SUCCESS;
 }
