@@ -4,50 +4,54 @@
 namespace math {
     /* This specifier combo should allow the compiler to inline the values
      * at compile time. */
-#define Unit inline constexpr Scalard
+#define Unit inline constexpr Real
 
     /* Convert from one unit to another. */
-#define convert(x, unit1, unit2) ((x*unit1)/unit2)
+#define convert(x, from, to) ((x*from)/to)
 
     /* Distance */
-    Unit nm = 1.0;
-    Unit angstrom = nm / 1.0e1;
-    Unit pm = nm / 1.0e3;
-    Unit fm = nm / 1.0e6;
-    Unit m = nm * 1.0e9;
+    Unit nanometer = 1.0;
+    Unit angstrom = nanometer / 1.0e1;
+    Unit picometer = nanometer / 1.0e3;
+    Unit femtometer = nanometer / 1.0e6;
+    Unit meter = nanometer * 1.0e9;
 
     /* Time */
-    Unit ns = 1.0;
-    Unit ps = ns / 1.0e3;
-    Unit fs = ns / 1.0e6;
-    Unit s = ns * 1.0e9;
+    Unit nanosecond = 1.0;
+    Unit picosecond = nanosecond / 1.0e3;
+    Unit femtosecond = nanosecond / 1.0e6;
+    Unit second = nanosecond * 1.0e9;
 
     /* Quantity */
     Unit atom = 1.0;
-    Unit NA = 1.0;
-    Unit mol = 6.02214076e23 / NA;
+    Unit NAvogadro = 1.0;
+    Unit mol = 6.02214076e23 / NAvogadro;
 
     /* Energy */
     Unit eps = 1.0; /* \approx 1.5kcal/mol */
     Unit kcal = eps * mol / 1.5;
-    Unit J = kcal / 4184.0;
-    Unit eV = 1.602176634e-19 * J;
+    Unit Joule = kcal / 4184.0;
+    Unit eV = 1.602176634e-19 * Joule;
 
     /* Temperature */
     Unit eps_over_kB = 1.0;
     Unit kB = eps;
-    Unit K = 1.380649e-23 * J / kB;
+    Unit Kelvin = 1.380649e-23 * Joule / kB;
 
     /* Mass */
-    Unit u = 1.0;
-    Unit kg = u * mol / 0.99999999965e-3;
+    Unit dalton = 1.0;
+    Unit kilogram = dalton * mol / 0.99999999965e-3;
 
     /* EM stuff */
-    Unit e = 1.0;
-    Unit C = e / 1.602176634e-19;
-    Unit A = C / s;
-    Unit c = 299792458.0 * m / s;
-    Unit H = kg*m*m/(s*s*A*A);
-    Unit mu_0 = 1.25663706212e-6 * H / m;
-    Unit varepsilon_0 = 1.0 / (mu_0 * c*c);
+    Unit echarge = 1.0;
+    Unit Coulomb = echarge / 1.602176634e-19;
+    Unit Ampere = Coulomb / second;
+    Unit cspeed = 299792458.0 * meter / second;
+    Unit Henry = kilogram*meter*meter/(second*second*Ampere*Ampere);
+    Unit mu_0 = 1.25663706212e-6 * Henry / meter;
+    Unit varepsilon_0 = 1.0 / (mu_0 * cspeed*cspeed);
+
+    /* Degrees */
+    Unit radian = 1.0;
+    Unit degree = (2.0 * M_PI / 360.0) * radian;
 }

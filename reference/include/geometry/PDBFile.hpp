@@ -1,10 +1,42 @@
 #pragma once
+#include "math/Types.hpp"
 #include <istream>
+#include <vector>
+#include <string>
+#include <unordered_map>
+#include <optional>
 
 namespace geometry {
+    /* PDB file loader */
     class PDBFile {
     public:
-        PDBFile(std::istream& file);
+        /* Read a PDB file from a given stream. If relevant CRYST1
+         * field is present, the crystallographic structure may be
+         * unwrapped. */
+        PDBFile(std::istream& file, bool unwrap = false);
 
+    private:
+        struct Residue {
+            /* We store for each atom only its position */
+            std::unordered_map<std::string, math::Real3> atoms = {};
+            char residue_code = 0;
+        };
+        struct Chain {
+            std::vector<Residue> residues = {};
+        };
+        std::unordered_map<char, Chain> chains;
+
+        struct SSBond {
+            /* Chain identifier and residue index. */
+            std::pair<char, int> cys1, cys2;
+            math::Real bond_distance;
+        };
+        std::vector<SSBond> ssbonds;
+
+        /* Crystallographic data */
+        struct Cryst1 {
+            math::Real3 size;
+        };
+        std::optional<Cryst1> cryst1;
     };
 }
