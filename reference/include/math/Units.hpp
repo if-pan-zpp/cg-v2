@@ -1,7 +1,7 @@
 #pragma once
 #include "math/Types.hpp"
 
-namespace math {
+namespace CG {
     /* This specifier combo should allow the compiler to inline the values
      * at compile time. */
 #define Unit inline constexpr Real

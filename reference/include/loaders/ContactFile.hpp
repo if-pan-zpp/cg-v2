@@ -3,7 +3,7 @@
 #include <vector>
 #include "math/Types.hpp"
 
-namespace loaders {
+namespace CG {
     class ContactFile {
     public:
         ContactFile() = default;
@@ -16,14 +16,14 @@ namespace loaders {
         /* Contacts in the map */
         struct Contact {
             std::pair<int, int> residues;
-            math::Real bond_distance;
+            Real bond_distance;
         };
         std::vector<Contact> contacts;
 
         /* Bond, dihedral angles */
         struct Angles {
-            math::Real bond;
-            math::Real dihedral;
+            Real bond;
+            Real dihedral;
         };
         std::vector<Angles> angles;
     };

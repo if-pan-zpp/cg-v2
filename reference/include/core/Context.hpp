@@ -1,7 +1,7 @@
 #pragma once
 #include "math/Types.hpp"
 
-namespace core {
+namespace CG {
     class Context {
     public:
 

@@ -5,7 +5,7 @@
 #include <filesystem>
 #include "loaders/ContactFile.hpp"
 
-namespace loaders {
+namespace CG {
     /* Sequence file loader */
     class SequenceFile {
     public:

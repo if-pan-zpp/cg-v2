@@ -1,12 +1,12 @@
 #include "loaders/PDBFile.hpp"
 #include "math/Types.hpp"
 #include "math/Units.hpp"
+#include "utils/ResidueName.hpp"
 #include <stdexcept>
 #include <map>
 
 using namespace std;
-using namespace loaders;
-using namespace math;
+using namespace CG;
 
 /* Yield a view of characters i..j (1-indexed) of s.
  * Note: 1-indexing is due to the specs in PDB file format
@@ -46,30 +46,6 @@ static string rtrim(string s) {
 static string trim(string s) {
     return rtrim(ltrim(move(s)));
 }
-
-/* Map from residue names to codes. */
-static map<string, char> residue_name_to_code = {
-    {"ALA", 'A'},
-    {"ARG", 'R'},
-    {"ASN", 'N'},
-    {"ASP", 'D'},
-    {"CYS", 'C'},
-    {"GLU", 'E'},
-    {"GLN", 'Q'},
-    {"GLY", 'G'},
-    {"HIS", 'H'},
-    {"ILE", 'I'},
-    {"LEU", 'L'},
-    {"LYS", 'K'},
-    {"MET", 'M'},
-    {"PHE", 'F'},
-    {"PRO", 'P'},
-    {"SER", 'S'},
-    {"THR", 'T'},
-    {"TRP", 'W'},
-    {"TYR", 'Y'},
-    {"VAL", 'V'}
-};
 
 PDBFile::PDBFile(istream &file, bool unwrap) {
     /* Note: we don't parse TER records. */
@@ -115,10 +91,7 @@ PDBFile::PDBFile(istream &file, bool unwrap) {
             auto& residue = chain.residues[residue_seq_num];
 
             /* Insert the atom. */
-            auto code_iter = residue_name_to_code.find(residue_name);
-            if (code_iter == residue_name_to_code.end())
-                throw runtime_error("PDB - incorrect residue name");
-            residue.residue_code = code_iter->second;
+            residue.residue_code = (char)ResidueName(residue_name);
             residue.atoms[atom_name] = Real3(x, y, z);
         }
         else if (record_name == "SSBOND") {

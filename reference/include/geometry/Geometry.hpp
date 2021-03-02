@@ -1,7 +1,7 @@
 #pragma once
 #include "math/Types.hpp"
 
-namespace geometry {
+namespace CG {
     class Geometry {
     public:
         /* Positions and velocities of the particles. */

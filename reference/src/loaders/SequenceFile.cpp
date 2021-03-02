@@ -1,6 +1,6 @@
 #include "loaders/SequenceFile.hpp"
 #include <fstream>
-using namespace loaders;
+using namespace CG;
 using namespace std;
 
 SequenceFile::SequenceFile(filesystem::path const& path) {

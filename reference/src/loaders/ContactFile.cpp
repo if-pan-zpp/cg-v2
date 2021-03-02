@@ -1,8 +1,7 @@
 #include "loaders/ContactFile.hpp"
 #include "math/Units.hpp"
-using namespace loaders;
+using namespace CG;
 using namespace std;
-using namespace math;
 
 ContactFile::ContactFile(std::istream &file) {
     int ncontacts, nresidues;

@@ -1,7 +1,7 @@
 #pragma once
 #include <eigen3/Eigen/Dense>
 
-namespace math {
+namespace CG {
     template<int N, typename T>
     using Vec = Eigen::Matrix<T, N, 1>;
 
