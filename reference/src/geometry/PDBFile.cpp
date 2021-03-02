@@ -2,7 +2,6 @@
 #include "math/Types.hpp"
 #include "math/Units.hpp"
 #include <stdexcept>
-#include <regex>
 #include <map>
 
 using namespace std;
@@ -28,24 +27,28 @@ static char view(string const &s, unsigned i) {
 }
 
 /* Remove whitespace from the left. */
-string ltrim(string const &s) {
-    static const regex ltrim_re = regex("^[:space:]*");
-    return regex_replace(s, ltrim_re, "");
+static inline string ltrim(string s) {
+    s.erase(s.begin(), find_if(s.begin(), s.end(), [](unsigned char c) -> auto {
+        return !std::isspace(c);
+    }));
+    return s;
 }
 
 /* Remove whitespace from the right. */
-string rtrim(string const &s) {
-    static const regex rtrim_re = regex("[:space:]*$");
-    return regex_replace(s, rtrim_re, "");
+static string rtrim(string s) {
+    s.erase(find_if(s.rbegin(), s.rend(), [](unsigned char c) -> auto {
+        return !std::isspace(c);
+    }).base(), s.end());
+    return s;
 }
 
 /* Remove whitespace from both ends. */
-string trim(string const &s) {
-    return rtrim(ltrim(s));
+static string trim(string s) {
+    return rtrim(ltrim(move(s)));
 }
 
 /* Map from residue names to codes. */
-static constexpr map<const char *, char> residue_name_to_code = {
+static map<string, char> residue_name_to_code = {
     {"ALA", 'A'},
     {"ARG", 'R'},
     {"ASN", 'N'},
@@ -82,13 +85,11 @@ PDBFile::PDBFile(istream &file, bool unwrap) {
         if (record_name == "ATOM") {
             /* Parse the necessary columns.
              * Note: Residue seq nums are 1-indexed by default, we change it. */
-            int atom_serial_num = stoi(view(line, 7, 11));
             string atom_name = trim(view(line, 13, 16));
             char alt_location = view(line, 17);
             string residue_name = trim(view(line, 18, 20));
             char chain_id = view(line, 22);
             int residue_seq_num = stoi(view(line, 23, 26)) - 1;
-            char insertion_code = view(line, 27);
             Real x = stod(view(line, 31, 38)) * angstrom;
             Real y = stod(view(line, 39, 46)) * angstrom;
             Real z = stod(view(line, 47, 54)) * angstrom;
@@ -117,7 +118,7 @@ PDBFile::PDBFile(istream &file, bool unwrap) {
             auto code_iter = residue_name_to_code.find(residue_name);
             if (code_iter == residue_name_to_code.end())
                 throw runtime_error("PDB - incorrect residue name");
-            residue.residue_code = *code_iter;
+            residue.residue_code = code_iter->second;
             residue.atoms[atom_name] = Real3(x, y, z);
         }
         else if (record_name == "SSBOND") {

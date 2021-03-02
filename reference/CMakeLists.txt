@@ -1,7 +1,6 @@
 find_package(Eigen3 3.3 REQUIRED)
 
 add_library(Reference)
-set_property(TARGET Reference PROPERTY CXX_STANDARD 17)
 
 # Globbing may or may not be bad. Use with caution.
 file(GLOB_RECURSE Headers include/*.hpp)
