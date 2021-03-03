@@ -1,5 +1,5 @@
 #include "loaders/PDBFile.hpp"
-#include "math/Types.hpp"
+#include "math/Vector.hpp"
 #include "math/Units.hpp"
 #include "utils/ResidueName.hpp"
 #include <stdexcept>

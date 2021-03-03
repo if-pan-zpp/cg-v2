@@ -16,11 +16,11 @@ namespace CG {
         explicit operator std::string() const;
         explicit operator int() const;
 
-    private:
-        char code;
-
         static std::map<std::string, char> name_to_code;
         static std::map<char, std::string> code_to_name;
         static std::string legacy_order;
+
+    private:
+        char code;
     };
 }

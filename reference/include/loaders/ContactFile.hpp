@@ -1,7 +1,7 @@
 #pragma once
 #include <istream>
 #include <vector>
-#include "math/Types.hpp"
+#include "math/Vector.hpp"
 
 namespace CG {
     class ContactFile {

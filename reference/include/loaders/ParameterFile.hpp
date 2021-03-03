@@ -2,7 +2,7 @@
 #include <istream>
 #include <vector>
 #include <optional>
-#include "math/Types.hpp"
+#include "math/Vector.hpp"
 
 namespace CG {
     class ParameterFile {

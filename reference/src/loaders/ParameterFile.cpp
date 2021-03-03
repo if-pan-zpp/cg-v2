@@ -30,6 +30,7 @@ ParameterFile::ParameterFile(std::istream &file, bool load_mj_matrix) {
     }
 
     /* Heurestic dihedral angle potential parameters. */
+    getline(file, line); /* Rest of last line */
     getline(file, line); /* Header */
     for (int i = 0; i < pairs_order.size(); ++i) {
         vector<Real> params(6);
@@ -64,13 +65,15 @@ ParameterFile::ParameterFile(std::istream &file, bool load_mj_matrix) {
     }
 
     /* Amino acid radii. */
-    getline(file, line);
+    getline(file, line); /* End of last one. */
+    getline(file, line); /* Header. */
     for (int i = 0; i < NUM_AMINOACIDS; ++i) {
         file >> amino_acid_radii[(char)ResidueName(i)];
     }
 
     /* Pair distances (and optionally MJ). */
-    getline(file, line);
+    getline(file, line); /* End of last one. */
+    getline(file, line); /* Header. */
     if (load_mj_matrix) {
         mj_matrix = PairMatrix();
     }
@@ -81,14 +84,18 @@ ParameterFile::ParameterFile(std::istream &file, bool load_mj_matrix) {
         Real dist;
         file >> res1 >> res2 >> dist;
 
-        string code1((char)ResidueName(res1), 1);
-        string code2((char)ResidueName(res2), 1);
-        ss_minimal_distances[code1 + code2] = dist;
+        string code1(1, (char)ResidueName(res1));
+        string code2(1, (char)ResidueName(res2));
+        auto pair1 = code1 + code2;
+        auto pair2 = code2 + code1;
+        ss_minimal_distances[pair1] = dist;
+        ss_minimal_distances[pair2] = dist;
 
         if (load_mj_matrix) {
             Real energy;
             file >> energy;
-            mj_matrix.value()[code1 + code2] = energy;
+            mj_matrix.value()[pair1] = energy;
+            mj_matrix.value()[pair2] = energy;
         }
     }
 }

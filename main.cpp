@@ -1,7 +1,9 @@
 #include <iostream>
-#include "loaders/SequenceFile.hpp"
+#include <fstream>
+#include "loaders/ParameterFile.hpp"
 
 int main() {
-    auto seqfile = loaders::SequenceFile("data/example3/glut.txt");
+    auto file = std::ifstream("data/parametersMDCG.txt");
+    auto paramfile = CG::ParameterFile(file, true);
     return EXIT_SUCCESS;
 }

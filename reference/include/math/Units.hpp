@@ -1,5 +1,5 @@
 #pragma once
-#include "math/Types.hpp"
+#include "math/Vector.hpp"
 
 namespace CG {
     /* This specifier combo should allow the compiler to inline the values
@@ -17,6 +17,7 @@ namespace CG {
     Unit meter = nanometer * 1.0e9;
 
     /* Time */
+    Unit tau = 1.0;
     Unit nanosecond = 1.0;
     Unit picosecond = nanosecond / 1.0e3;
     Unit femtosecond = nanosecond / 1.0e6;
