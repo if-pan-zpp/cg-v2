@@ -59,7 +59,7 @@ ResidueName::ResidueName(const string &s) {
     code = name_to_code[s];
 }
 
-ResidueName::ResidueName(int i) {
+ResidueName::ResidueName(Index i) {
     code = legacy_order[i];
 }
 
@@ -71,6 +71,6 @@ ResidueName::operator std::string() const {
     return code_to_name[code];
 }
 
-ResidueName::operator int() const {
+ResidueName::operator Index() const {
     return legacy_order.find(code);
 }

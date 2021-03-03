@@ -1,6 +1,6 @@
 #include "loaders/PDBFile.hpp"
-#include "math/Vector.hpp"
-#include "math/Units.hpp"
+#include "utils/Types.hpp"
+#include "utils/Units.hpp"
 #include "utils/ResidueName.hpp"
 #include <stdexcept>
 #include <map>
@@ -48,8 +48,9 @@ static string trim(string s) {
 }
 
 PDBFile::PDBFile(istream &file, bool unwrap) {
-    /* Note: we don't parse TER records. */
-    /* TODO: lunwrap */
+    /* Note: we don't parse TER records. As for the magic numbers, see PDB
+     * file reference.
+     * TODO: implement unwrapping */
 
     string line;
     while (getline(file, line)) {
@@ -123,4 +124,8 @@ PDBFile::PDBFile(istream &file, bool unwrap) {
             break;
         }
     }
+}
+
+Model PDBFile::model(bool from_all_atoms) {
+    return Model();
 }

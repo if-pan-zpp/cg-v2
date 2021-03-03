@@ -1,19 +1,20 @@
 find_package(Eigen3 3.3 REQUIRED)
 
-add_library(Reference)
+set(Target Reference)
+add_library(${Target})
 
 # Globbing may or may not be bad. Use with caution.
 file(GLOB_RECURSE Headers include/*.hpp)
-target_sources(Reference
+target_sources(${Target}
     PUBLIC ${Headers})
 
 # Globbing may or may not be bad. Use with caution.
 file(GLOB_RECURSE Sources src/*.cpp)
-target_sources(Reference
+target_sources(${Target}
     PRIVATE ${Sources})
 
-target_link_libraries(Reference
+target_link_libraries(${Target}
     PRIVATE Eigen3::Eigen)
 
-target_include_directories(Reference
+target_include_directories(${Target}
     PUBLIC include)

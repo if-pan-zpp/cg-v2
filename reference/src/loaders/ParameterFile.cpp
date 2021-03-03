@@ -12,7 +12,7 @@ ParameterFile::ParameterFile(std::istream &file, bool load_mj_matrix) {
      * but they initialize sigma1 (cg.f:5523), which in turn is all over the
      * place; we shall therefore for now ignore it.
      * TODO: figure out what is this. */
-    for (int i = 0; i < 2; ++i)
+    for (Index i = 0; i < 2; ++i)
         getline(file, line);
 
     vector<string> pairs_order = {"GG", "GP", "GX", "PG", "PP", "PX", "XG",
@@ -20,9 +20,9 @@ ParameterFile::ParameterFile(std::istream &file, bool load_mj_matrix) {
 
     /* Heurestic bond angle potential parameters. */
     getline(file, line); /* Header */
-    for (int i = 0; i < pairs_order.size(); ++i) {
+    for (Index i = 0; i < pairs_order.size(); ++i) {
         vector<Real> params(7);
-        for (int j = 0; j < params.size(); ++j) {
+        for (Index j = 0; j < params.size(); ++j) {
             file >> params[j];
         }
 
@@ -32,9 +32,9 @@ ParameterFile::ParameterFile(std::istream &file, bool load_mj_matrix) {
     /* Heurestic dihedral angle potential parameters. */
     getline(file, line); /* Rest of last line */
     getline(file, line); /* Header */
-    for (int i = 0; i < pairs_order.size(); ++i) {
+    for (Index i = 0; i < pairs_order.size(); ++i) {
         vector<Real> params(6);
-        for (int j = 0; j < params.size(); ++j) {
+        for (Index j = 0; j < params.size(); ++j) {
             file >> params[j];
         }
 
@@ -44,30 +44,30 @@ ParameterFile::ParameterFile(std::istream &file, bool load_mj_matrix) {
     /* Specificities. */
     /* Get the order of amino acids. */
     string order, res_name;
-    for (int i = 0; i < NUM_AMINOACIDS; ++i) {
+    for (Index i = 0; i < NUM_AMINOACIDS; ++i) {
         file >> res_name;
         auto code = (char)ResidueName(res_name);
         order.push_back(code);
         specificities[code] = Specificity();
     }
     /* Get the rest of structure data. */
-    for (int i = 0; i < NUM_AMINOACIDS; ++i) {
+    for (Index i = 0; i < NUM_AMINOACIDS; ++i) {
         file >> specificities[order[i]].polarity;
     }
-    for (int i = 0; i < NUM_AMINOACIDS; ++i) {
+    for (Index i = 0; i < NUM_AMINOACIDS; ++i) {
         file >> specificities[order[i]].coordination_number;
     }
-    for (int i = 0; i < NUM_AMINOACIDS; ++i) {
+    for (Index i = 0; i < NUM_AMINOACIDS; ++i) {
         file >> specificities[order[i]].hydrophobic_coordination_number;
     }
-    for (int i = 0; i < NUM_AMINOACIDS; ++i) {
+    for (Index i = 0; i < NUM_AMINOACIDS; ++i) {
         file >> specificities[order[i]].polar_coordination_number;
     }
 
     /* Amino acid radii. */
     getline(file, line); /* End of last one. */
     getline(file, line); /* Header. */
-    for (int i = 0; i < NUM_AMINOACIDS; ++i) {
+    for (Index i = 0; i < NUM_AMINOACIDS; ++i) {
         file >> amino_acid_radii[(char)ResidueName(i)];
     }
 
@@ -79,7 +79,7 @@ ParameterFile::ParameterFile(std::istream &file, bool load_mj_matrix) {
     }
 
 #define AMINO_ACID_PAIRS 210
-    for (int i = 0; i < AMINO_ACID_PAIRS; ++i) {
+    for (Index i = 0; i < AMINO_ACID_PAIRS; ++i) {
         string res1, res2;
         Real dist;
         file >> res1 >> res2 >> dist;

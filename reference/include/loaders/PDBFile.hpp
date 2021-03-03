@@ -1,5 +1,7 @@
 #pragma once
-#include "math/Vector.hpp"
+#include "utils/Types.hpp"
+#include "model/Model.hpp"
+#include "model/NativeStructure.hpp"
 #include <istream>
 #include <vector>
 #include <string>
@@ -15,6 +17,9 @@ namespace CG {
          * unwrapped. */
         explicit PDBFile(std::istream& file, bool unwrap = false);
 
+        /* Construct a model from the PDB file. */
+        Model model(bool from_all_atoms = false);
+
     private:
         struct Residue {
             /* We store for each atom only its position */
@@ -28,7 +33,7 @@ namespace CG {
 
         struct SSBond {
             /* Chain identifier and residue index. */
-            std::pair<char, int> cys1, cys2;
+            std::pair<char, Index> cys1, cys2;
             Real bond_distance;
         };
         std::vector<SSBond> ssbonds;

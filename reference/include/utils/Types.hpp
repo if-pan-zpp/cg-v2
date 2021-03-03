@@ -1,5 +1,6 @@
 #pragma once
 #include <eigen3/Eigen/Core>
+#include <eigen3/Eigen/Geometry>
 #include <vector>
 
 namespace CG {
@@ -9,20 +10,17 @@ namespace CG {
 
     /* Note: columns are vectors, rows are dimensions. */
     template<int N, typename T>
-    using VecList = Eigen::Array<T, N, Eigen::Dynamic>;
+    using VecList = Eigen::Matrix<T, N, Eigen::Dynamic>;
 
     /* Numerical entities. */
     using Real = double;
     using RealList = VecList<1, Real>;
     using Real3 = Vec<3, Real>;
     using Real3List = VecList<3, Real>;
+    using RealAffine3 = Eigen::Transform<Real, 3, Eigen::Affine>;
 
     /* Note: in 3.4 version of Eigen, there is better indexing facilities. */
-    using IndexList = std::vector<int>;
-    using IndexPairList = std::vector<std::pair<int, int>>;
-
-    /* Helpers - vectors broadcasts individual elements, whereas dims
-     * broadcasts entire axes. */
-#define vectors(list) (list.colwise().matrix())
-#define dims(list) (list.rowwise().matrix())
+    using Index = unsigned;
+    using IndexList = std::vector<Index>;
+    using IndexPairList = std::vector<std::pair<Index, Index>>;
 }

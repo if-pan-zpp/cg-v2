@@ -1,4 +1,5 @@
 #pragma once
+#include "utils/Types.hpp"
 #include <string>
 #include <map>
 
@@ -10,11 +11,11 @@ namespace CG {
     public:
         explicit ResidueName(char c);
         explicit ResidueName(std::string const& s);
-        explicit ResidueName(int i);
+        explicit ResidueName(Index i);
 
         explicit operator char() const;
         explicit operator std::string() const;
-        explicit operator int() const;
+        explicit operator Index() const;
 
         static std::map<std::string, char> name_to_code;
         static std::map<char, std::string> code_to_name;

@@ -1,5 +1,5 @@
 #pragma once
-#include "math/Vector.hpp"
+#include "Types.hpp"
 
 namespace CG {
     /* This specifier combo should allow the compiler to inline the values

@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <string>
 #include <filesystem>
-#include "loaders/ContactFile.hpp"
+#include "loaders/ContactMapFile.hpp"
 
 namespace CG {
     /* Sequence file loader */
@@ -17,12 +17,12 @@ namespace CG {
     private:
         /* An array with contact files, so as to not load them
          * multiple times. */
-        std::unordered_map<std::string, ContactFile> contact_files;
+        std::unordered_map<std::string, ContactMapFile> map_files;
 
         /* Chains. */
         struct Chain {
             std::string residue_codes;
-            std::vector<ContactFile*> contact_files;
+            std::vector<ContactMapFile*> map_files;
         };
         std::vector<Chain> chains;
     };
