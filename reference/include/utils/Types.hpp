@@ -1,4 +1,5 @@
 #pragma once
+#include "utils/AminoAcid.hpp"
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Geometry>
 #include <vector>

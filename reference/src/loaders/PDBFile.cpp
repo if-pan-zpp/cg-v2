@@ -1,7 +1,7 @@
 #include "loaders/PDBFile.hpp"
 #include "utils/Types.hpp"
 #include "utils/Units.hpp"
-#include "utils/ResidueName.hpp"
+#include "utils/AminoAcid.hpp"
 #include <stdexcept>
 #include <map>
 
@@ -47,10 +47,13 @@ static string trim(string s) {
     return rtrim(ltrim(move(s)));
 }
 
-PDBFile::PDBFile(istream &file, bool unwrap) {
+PDBFile::PDBFile(istream &file) {
     /* Note: we don't parse TER records. As for the magic numbers, see PDB
      * file reference.
      * TODO: implement unwrapping */
+
+    /* Map from the chain id's within the file to the ones in the full_model. */
+    std::unordered_map<char, Index> chain_id_map;
 
     string line;
     while (getline(file, line)) {
@@ -82,50 +85,44 @@ PDBFile::PDBFile(istream &file, bool unwrap) {
 
             /* Locate the chain; if such chain doesn't exist, operator[]
              * creates it. */
-            auto& chain = chains[chain_id];
+            if (chain_id_map.find(chain_id) == chain_id_map.end())
+                chain_id_map[chain_id] = chain_id_map.size();
+            auto &chain = full_model.chains[chain_id_map[chain_id]];
 
             /* Locate the residue. */
-            if (residue_seq_num > chain.residues.size())
+            if (residue_seq_num > chain.size())
                 throw runtime_error("PDB - incorrect residue order");
-            if (residue_seq_num == chain.residues.size())
-                chain.residues.emplace_back();
-            auto& residue = chain.residues[residue_seq_num];
+            auto &residue = chain.emplace_back();
 
             /* Insert the atom. */
-            residue.residue_code = (char)ResidueName(residue_name);
+            residue.type = residue_name;
             residue.atoms[atom_name] = Real3(x, y, z);
-        }
-        else if (record_name == "SSBOND") {
+        } else if (record_name == "SSBOND") {
             /* Parse relevant fields
              * Note: Residue seq nums are 1-indexed by default, we change it. */
             char cys1_chain_id = view(line, 16);
-            int cys1_residue_seq_num = stoi(view(line, 18, 21)) - 1;
+            int cys1_seq_num = stoi(view(line, 18, 21)) - 1;
             char cys2_chain_id = view(line, 30);
-            int cys2_residue_seq_num = stoi(view(line, 32, 35)) - 1;
-            Real bond_distance = stod(view(line, 74, 78)) * angstrom;
+            int cys2_seq_num = stoi(view(line, 32, 35)) - 1;
+            Real distance = stod(view(line, 74, 78)) * angstrom;
 
             /* Insert SS bond */
-            ssbonds.emplace_back((SSBond) {
-                .cys1 = {cys1_chain_id, cys1_residue_seq_num},
-                .cys2 = {cys2_chain_id, cys2_residue_seq_num},
-                .bond_distance = bond_distance
+            full_model.contacts.push_back((FullModel::Contact) {
+                .res1 = { chain_id_map[cys1_chain_id], cys1_seq_num },
+                .res2 = { chain_id_map[cys2_chain_id], cys2_seq_num },
+                .distance = distance,
+                .type = "ssbond"
             });
-        }
-        else if (record_name == "CRYST1" && !cryst1) {
+        } else if (record_name == "CRYST1" && !cryst1) {
             /* Parse relevant fields. cg.f:5066-5076, we only want the sides
              * and ignore the angles and space group and Z value. */
             Real a = stod(view(line, 7, 15)) * angstrom;
             Real b = stod(view(line, 16, 24)) * angstrom;
             Real c = stod(view(line, 25, 33)) * angstrom;
 
-            cryst1 = (Cryst1) {.size = Real3(a, b, c)};
-        }
-        else if (record_name == "END") {
+            cryst1 = Real3(a, b, c);
+        } else if (record_name == "END") {
             break;
         }
     }
-}
-
-Model PDBFile::model(bool from_all_atoms) {
-    return Model();
 }

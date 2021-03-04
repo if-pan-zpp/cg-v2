@@ -2,6 +2,7 @@
 #include "model/NativeStructure.hpp"
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 namespace CG {
     /* This class represents a single chain in <Model>. In particular,
@@ -10,7 +11,7 @@ namespace CG {
      * line or a self-avoiding walk. */
     class Chain {
     public:
-        std::string residue_codes;
+        std::vector<AminoAcid> residues;
         Real3List positions;
         std::vector<NativeStructure> structured_parts;
 

@@ -68,7 +68,7 @@ Neighborhoods::Neighborhoods(Geometry *geometry, Real cutoff, Real pad,
         for (; j < system->nresidues; ++j) {
             if (j - i == 4 && !include4) continue;
 
-            auto pos_j = system->pos.col(j).matrix();
+            auto pos_j = system->pos.col(j);
             if (geometry->diff(pos_i, pos_j).norm() <= max_correct_dist)
                 pairs.emplace_back(i, j);
         }

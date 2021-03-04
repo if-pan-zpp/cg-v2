@@ -15,6 +15,7 @@ namespace CG {
     Unit picometer = nanometer / 1.0e3;
     Unit femtometer = nanometer / 1.0e6;
     Unit meter = nanometer * 1.0e9;
+    Unit cg_f_unit = 5.0 * angstrom;
 
     /* Time */
     Unit tau = 1.0;

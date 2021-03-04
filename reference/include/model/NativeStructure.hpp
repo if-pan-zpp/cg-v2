@@ -16,7 +16,10 @@ namespace CG {
         };
         std::vector<Contact> contacts;
 
-        /* Bond, dihedral angles. */
-        RealList bond, dihedral;
+        /* Tether and angle data:
+         * bond(i) -> bond angle between i-1, i, i+1;
+         * dihedral(i) -> dihedral angle between i-2, i-1, i, i+1;
+         * tether(i) -> equilibrium distance between i, i+1. */
+        RealList bond, dihedral, tether;
     };
 }
