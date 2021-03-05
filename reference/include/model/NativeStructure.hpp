@@ -19,7 +19,9 @@ namespace CG {
         /* Tether and angle data:
          * bond(i) -> bond angle between i-1, i, i+1;
          * dihedral(i) -> dihedral angle between i-2, i-1, i, i+1;
-         * tether(i) -> equilibrium distance between i, i+1. */
+         * tether(i) -> equilibrium distance between i, i+1.
+         * Note: lists may be empty, which is supposed to mean that
+         * this particular data is omitted. */
         RealList bond, dihedral, tether;
     };
 }

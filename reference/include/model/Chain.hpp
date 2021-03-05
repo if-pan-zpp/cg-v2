@@ -13,6 +13,8 @@ namespace CG {
     public:
         std::vector<AminoAcid> residues;
         Real3List positions;
+        /* Native structures over the chain. Note that if they
+         * overlap, we should prioritize the structures later in the list. */
         std::vector<NativeStructure> structured_parts;
 
         /* Morph the chain into a straight-line formation. */

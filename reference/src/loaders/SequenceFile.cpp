@@ -8,21 +8,23 @@ SequenceFile::SequenceFile(filesystem::path const& path) {
     int nchains;
     file >> nchains;
 
-    chains = vector<Chain>(nchains);
-
     for (Index i = 0; i < nchains; ++i) {
-        auto& chain = chains[i];
+        auto& chain = model.chains[i];
+        NativeStructure ns;
 
         /* Load residue codes. */
         int nresidues;
+        std::string residue_codes;
         file >> nresidues;
-        chain.residue_codes.resize(nresidues);
-        file >> chain.residue_codes;
+        file >> residue_codes;
+
+        for (auto res: residue_codes) {
+            chain.residues.emplace_back(res);
+        }
 
         /* Load contact maps. */
         int ncontact_maps;
         file >> ncontact_maps;
-        chain.map_files = vector<ContactMapFile*>(ncontact_maps);
 
         for (Index j = 0; j < ncontact_maps; ++j) {
             /* Use path relative to the parent dir of the sequence file. */
@@ -32,16 +34,12 @@ SequenceFile::SequenceFile(filesystem::path const& path) {
 
             auto contact_map_iter = map_files.find(contact_map_path);
             if (contact_map_iter == map_files.end()) {
-                /* If new contact map, insert into the map. */
                 auto contact_map_file = ifstream(contact_map_path);
-                auto& contact_file = map_files[contact_map_path];
-                contact_file = ContactMapFile(contact_map_file);
-                chain.map_files[j] = &contact_file;
+                map_files[contact_map_path] = ContactMapFile(contact_map_file);
             }
-            else {
-                /* Otherwise, use existing contact map. */
-                chain.map_files[j] = &contact_map_iter->second;
-            }
+
+            auto const& contact_map = map_files[contact_map_path];
+            chain.structured_parts.push_back(contact_map.ns);
         }
     }
 }

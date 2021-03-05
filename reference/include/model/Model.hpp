@@ -36,6 +36,6 @@ namespace CG {
         void apply(RealAffine3 const& aff);
 
         /* Derive a contact map from only CA atom positions. */
-        void derive_contacts(Parameters const& parameters);
+        void derive_contacts_from_CA_atoms(Parameters const& parameters);
     };
 }

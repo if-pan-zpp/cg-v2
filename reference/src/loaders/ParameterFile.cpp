@@ -1,6 +1,7 @@
 #include "loaders/ParameterFile.hpp"
 #include "utils/AminoAcid.hpp"
 #include <sstream>
+#include <fstream>
 
 using namespace CG;
 using namespace std;
@@ -100,15 +101,16 @@ ParameterFile::ParameterFile(std::istream &file, bool load_mj_matrix) {
         file >> parameters.amino_acid_radii[(char)AminoAcid(i)];
     }
 
-    /* Pair distances (and optionally MJ). */
+    /* Pair distances (and optionally MJ).
+     * TODO: load_mj_matrix must actually "be correct", fix it later. */
     getline(file, line); /* End of last one. */
     getline(file, line); /* Header. */
     if (load_mj_matrix) {
         parameters.mj_matrix = Parameters::PairMatrix();
     }
 
-#define AMINO_ACID_PAIRS 210
-    for (Index i = 0; i < AMINO_ACID_PAIRS; ++i) {
+    auto num_amino_acid_pairs = AminoAcid::num_amino_acids * (AminoAcid::num_amino_acids + 1);
+    for (Index i = 0; i < num_amino_acid_pairs; ++i) {
         string res1, res2;
         Real dist;
         file >> res1 >> res2 >> dist;
@@ -126,4 +128,10 @@ ParameterFile::ParameterFile(std::istream &file, bool load_mj_matrix) {
             parameters.mj_matrix[{code2, code1}] = energy;
         }
     }
+}
+
+ParameterFile::ParameterFile(const filesystem::path &path,
+    bool load_mj_matrix) {
+    auto filestream = ifstream(path);
+    *this = ParameterFile(filestream, load_mj_matrix);
 }

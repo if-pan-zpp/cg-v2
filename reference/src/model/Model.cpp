@@ -33,7 +33,7 @@ void Model::apply(RealAffine3 const& aff) {
     }
 }
 
-void Model::derive_contacts(const Parameters &parameters) {
+void Model::derive_contacts_from_CA_atoms(const Parameters &parameters) {
     for (auto const& [i1, chain1]: chains) {
         auto nresidues1 = chain1.residues.size();
         for (auto const& [i2, chain2]: chains) {

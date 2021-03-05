@@ -6,6 +6,7 @@
 #include <string>
 #include <unordered_map>
 #include <optional>
+#include <filesystem>
 
 namespace CG {
     /* PDB file loader */
@@ -15,6 +16,7 @@ namespace CG {
          * field is present.
          * Note: figure out what lunwrap does in cg.f */
         explicit PDBFile(std::istream& file);
+        explicit PDBFile(std::filesystem::path const& path);
 
         FullModel full_model;
         std::optional<Real3> cryst1;

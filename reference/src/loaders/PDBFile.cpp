@@ -3,6 +3,7 @@
 #include "utils/Units.hpp"
 #include "utils/AminoAcid.hpp"
 #include <stdexcept>
+#include <fstream>
 #include <map>
 
 using namespace std;
@@ -92,7 +93,9 @@ PDBFile::PDBFile(istream &file) {
             /* Locate the residue. */
             if (residue_seq_num > chain.size())
                 throw runtime_error("PDB - incorrect residue order");
-            auto &residue = chain.emplace_back();
+            if (residue_seq_num == chain.size())
+                chain.emplace_back();
+            auto& residue = chain[residue_seq_num];
 
             /* Insert the atom. */
             residue.type = residue_name;
@@ -125,4 +128,9 @@ PDBFile::PDBFile(istream &file) {
             break;
         }
     }
+}
+
+PDBFile::PDBFile(const filesystem::path &path) {
+    auto filestream = ifstream(path);
+    *this = PDBFile(filestream);
 }

@@ -4,6 +4,7 @@
 #include <string>
 #include <filesystem>
 #include "loaders/ContactMapFile.hpp"
+#include "model/Model.hpp"
 
 namespace CG {
     /* Sequence file loader */
@@ -14,16 +15,13 @@ namespace CG {
          * and not the caller. */
         explicit SequenceFile(std::filesystem::path const& path);
 
+        /* A model for the proteins in the sequence file.
+         * Note: positions are null by default. */
+        Model model;
+
     private:
         /* An array with contact files, so as to not load them
          * multiple times. */
         std::unordered_map<std::string, ContactMapFile> map_files;
-
-        /* Chains. */
-        struct Chain {
-            std::string residue_codes;
-            std::vector<ContactMapFile*> map_files;
-        };
-        std::vector<Chain> chains;
     };
 }

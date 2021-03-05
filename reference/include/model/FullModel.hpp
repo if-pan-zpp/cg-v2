@@ -38,10 +38,10 @@ namespace CG {
         void apply(RealAffine3 const& aff);
 
         /* Reduce into a Model. */
-        explicit operator Model() const;
+        Model reduce() const;
 
         /* Derive a contact map from full atomic data. */
-        void derive_contacts(Parameters const& parameters);
+        void derive_contacts_from_all_atoms(Parameters const& parameters);
 
     private:
         /* Reduce into a CG::Chain. */

@@ -1,5 +1,6 @@
 #pragma once
 #include <istream>
+#include <filesystem>
 #include "model/NativeStructure.hpp"
 
 namespace CG {
@@ -7,6 +8,7 @@ namespace CG {
     public:
         ContactMapFile() = default;
         explicit ContactMapFile(std::istream& file);
+        explicit ContactMapFile(std::filesystem::path const& path);
         NativeStructure ns;
     };
 }

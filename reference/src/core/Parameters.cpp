@@ -61,7 +61,7 @@ Parameters::Parameters() {
     atom_radii[p("ASP", "CB")] = 1.88;
     atom_radii[p("ASP", "CG")] = 1.61;
     atom_radii[p("ASP", "OD1")] = 1.46;
-    atom_radii[p("ASP", "OD1")] = 1.42;
+    atom_radii[p("ASP", "OD2")] = 1.42;
 
     atom_radii[p("GLU", "CB")] = 1.88;
     atom_radii[p("GLU", "CG")] = 1.88;

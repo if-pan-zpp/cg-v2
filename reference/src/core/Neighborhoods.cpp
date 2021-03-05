@@ -82,7 +82,7 @@ void Neighborhoods::update_max_correct_dist() {
     auto displacements = (reference_pos - system->pos).matrix().colwise();
     Real max_displacement = sqrt(displacements.squaredNorm().maxCoeff());
     Real pbc_box_change = (reference_box_shape - geometry->box_shape).norm();
-    max_correct_dist = (cutoff + 2.0*pad) - max_displacement - pbc_box_change;
+    max_correct_dist = (cutoff + 2.0*pad)-2.0*max_displacement-pbc_box_change;
     max_correct_dist = max(max_correct_dist, 0.0);
 }
 

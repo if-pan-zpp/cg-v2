@@ -1,5 +1,6 @@
 #include "loaders/ContactMapFile.hpp"
 #include "utils/Units.hpp"
+#include <fstream>
 using namespace CG;
 using namespace std;
 
@@ -28,9 +29,14 @@ ContactMapFile::ContactMapFile(istream &file) {
 
     for (Index i = 0; i < nresidues; ++i) {
         /* Angles are given in radians, per README.txt */
-        file >> ns.bond[i];
-        ns.bond[i] *= radian;
-        file >> ns.dihedral[i];
-        ns.dihedral[i] *= radian;
+        file >> ns.bond(i);
+        ns.bond(i) *= radian;
+        file >> ns.dihedral(i);
+        ns.dihedral(i) *= radian;
     }
+}
+
+ContactMapFile::ContactMapFile(std::filesystem::path const& path) {
+    auto filestream = ifstream(path);
+    *this = ContactMapFile(filestream);
 }
