@@ -1,11 +1,11 @@
 #pragma once
 #include "data/Primitives.hpp"
-#include "data/System.hpp"
-#include "data/LocalStructure.hpp"
+#include "data/PseudoAtoms.hpp"
+#include "data/NativeStructure.hpp"
 #include <vector>
 #include <functional>
 
-namespace cg {
+namespace cg::reference {
     class Topology;
 
     class Neighborhood {
@@ -13,7 +13,7 @@ namespace cg {
         struct Spec {
             int minLocalOffset;
             bool include4;
-            Pairs* exclusions; /* must be lex-ordered */
+            Pairs* exclusions;
             std::vector<std::pair<std::string, std::string>> pairTypes;
             Real cutoff, pad;
         };
@@ -40,13 +40,17 @@ namespace cg {
         friend class Neighborhood;
         std::vector<Neighborhood> neighborhoods;
 
-    public:
-        System *system;
-        LocalStructure *ls;
-
-        Neighborhood const& createNeighborhood(Neighborhood::Spec const& spec);
+        PseudoAtoms const* pseudoAtoms;
+        NativeStructure const* ns;
 
         Real3 cell, cell_inv; /* 0 means no PBC along that axis. */
+
+    public:
+        Topology(PseudoAtoms const& pseudoAtoms, NativeStructure const& ns);
+
+        /* Get the neighborhood with specificed specs. */
+        Neighborhood const& createNeighborhood(Neighborhood::Spec const& spec);
+
         void updateCellSize(Real3 newCell);
 
         /* This is the vector from p to the closest image of q under the PBC

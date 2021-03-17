@@ -1,20 +1,24 @@
 #pragma once
 #include "forces/Force.hpp"
-#include "data/System.hpp"
+#include "data/PseudoAtoms.hpp"
 #include "data/NativeStructure.hpp"
-#include "data/LocalStructure.hpp"
 #include "utils/Units.hpp"
 
-namespace cg {
+namespace cg::reference {
+    using namespace cg::toolkit;
+
     class HarmonicTethers: public Force {
+    private:
+        PseudoAtoms const* pseudoAtoms;
+        NativeStructure const* ns;
+
     public:
-        System *system;
-        NativeStructure *ns;
-        LocalStructure *ls;
         Real default_dist0 = 3.8*angstrom;
         Real k1 = 100.0*eps/(angstrom*angstrom);
         Real k3 = 0.0;
 
-        void compute(Reals *energy, Reals3 *force) override;
+        HarmonicTethers(PseudoAtoms const& pseudoAtoms, NativeStructure const& ns, ChainData const& ls);
+
+        void compute(Reals &energy, Reals3 &forces) override;
     };
 }

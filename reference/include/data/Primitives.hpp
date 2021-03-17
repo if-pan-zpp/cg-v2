@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 
-namespace cg {
+namespace cg::reference {
     using Real = double;
     using Real3 = Eigen::Vector3d;
     using Reals3 = Eigen::Matrix3Xd;

@@ -1,19 +1,26 @@
 #pragma once
+
 #include "forces/Force.hpp"
-#include "data/System.hpp"
+#include "data/PseudoAtoms.hpp"
 #include "data/NativeStructure.hpp"
-#include "data/LocalStructure.hpp"
 #include "utils/Units.hpp"
 
-namespace cg {
-    class ComplexNativeDihedral: public Force {
-    public:
-        System *system;
-        NativeStructure *ns;
-        LocalStructure *ls;
-        Real K1 = 0.33*eps/(radian*radian);
-        Real K3 = 0.33*eps/(radian*radian);
+namespace cg::reference {
+    using namespace cg::toolkit;
 
-        void compute(Reals *energy, Reals3 *force) override;
+    /* CPC14.pdf, 3.2.1, different for simple and complex
+     * variants because of the hyperparameters. */
+    class ComplexNativeDihedral : public Force {
+    private:
+        PseudoAtoms const *pseudoAtoms;
+        NativeStructure const *ns;
+
+    public:
+        Real K1 = 0.33 * eps / (radian * radian);
+        Real K3 = 0.33 * eps / (radian * radian);
+
+        ComplexNativeDihedral(PseudoAtoms const &pseudoAtoms, NativeStructure const &ns);
+
+        void compute(Real &energy, Reals3 &forces) override;
     };
 }

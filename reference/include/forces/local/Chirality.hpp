@@ -1,18 +1,19 @@
 #pragma once
 #include "forces/Force.hpp"
-#include "data/System.hpp"
+#include "data/PseudoAtoms.hpp"
 #include "data/NativeStructure.hpp"
 
-namespace cg {
+namespace cg::reference {
+    /* CPC14.pdf, 3.1 */
     class Chirality: public Force {
     private:
-        System *system;
-        NativeStructure *ns;
-        Real echi;
+        PseudoAtoms const *pseudoAtoms;
+        NativeStructure const *ns;
 
     public:
-        Chirality(System* system, NativeStructure *ns, Real echi);
+        Real echi = 1.0;
+        Chirality(PseudoAtoms const& pseudoAtoms, NativeStructure const& ns);
 
-        void compute(Reals *energy, Reals3 *force) override;
+        void compute(Real& energy, Reals3& forces) override;
     };
 }

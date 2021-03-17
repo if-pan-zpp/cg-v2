@@ -1,14 +1,25 @@
 #pragma once
 #include "forces/Force.hpp"
-#include "data/Contacts.hpp"
+#include "data/Topology.hpp"
 #include "utils/Units.hpp"
 
-namespace cg {
-    class PauliExclusion: public Force {
-    public:
-        Contacts *contacts;
-        Real excludedRadius = 5.0*angstrom;
+namespace cg::reference {
+    using namespace cg::toolkit;
 
-        void compute(Reals *energy, Reals3 *force) override;
+    /* CPC14.pdf, 4.1 (repulsive part)
+     * As per Łukasz's comment, we may compute these forces
+     * for all relevant pairs, as opposed to only those not in
+     * contact. */
+    class PauliExclusion: public Force {
+    private:
+        Topology const* top;
+        Neighborhood const* excludedPairs;
+        Real excludedRadius;
+
+    public:
+        PauliExclusion(Topology const& top,
+            Real excludedRadius = 5.0*angstrom);
+
+        void compute(Real &energy, Reals3 &forces) override;
     };
 }
