@@ -59,8 +59,8 @@ Model FullModel::reduce() const {
     return redux;
 }
 
-cg::Chain FullModel::reduceChain(const FullModel::Chain &chain) const {
-    cg::Chain reduxChain;
+cg::toolkit::Chain FullModel::reduceChain(const FullModel::Chain &chain) const {
+    cg::toolkit::Chain reduxChain;
     NativeStructure ns;
 
     Real3List CA;

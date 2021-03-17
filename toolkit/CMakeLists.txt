@@ -1,6 +1,6 @@
 find_package(Eigen3 3.3 REQUIRED)
 
-set(Target base)
+set(Target toolkit)
 add_library(${Target})
 
 # Globbing may or may not be bad. Use with caution.

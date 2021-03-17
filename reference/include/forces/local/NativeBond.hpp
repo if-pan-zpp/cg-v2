@@ -18,6 +18,6 @@ namespace cg::reference {
 
         NativeBond(PseudoAtoms const& pseudoAtoms, NativeStructure const& ns);
 
-        void compute(Reals &energy, Reals3 &forces) override;
+        void compute(Real &energy, Reals3 &forces) override;
     };
 }

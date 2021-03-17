@@ -17,8 +17,8 @@ namespace cg::reference {
         Real k1 = 100.0*eps/(angstrom*angstrom);
         Real k3 = 0.0;
 
-        HarmonicTethers(PseudoAtoms const& pseudoAtoms, NativeStructure const& ns, ChainData const& ls);
+        HarmonicTethers(PseudoAtoms const& pseudoAtoms, NativeStructure const& ns);
 
-        void compute(Reals &energy, Reals3 &forces) override;
+        void compute(Real &energy, Reals3 &forces) override;
     };
 }

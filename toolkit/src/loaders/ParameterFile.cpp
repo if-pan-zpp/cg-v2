@@ -81,7 +81,7 @@ ParameterFile::ParameterFile(std::istream &file, bool loadMjMatrix) {
     /* Get the rest of structure data. Unfortunately we need to write out
      * all four loops. */
     for (Index i = 0; i < AminoAcid::numAminoAcids; ++i) {
-        file >> parameters.specificities[order[i]].polarity;
+        file >> (int&)parameters.specificities[order[i]].polarity;
     }
     for (Index i = 0; i < AminoAcid::numAminoAcids; ++i) {
         file >> parameters.specificities[order[i]].coordinationNumber;

@@ -13,11 +13,12 @@ namespace cg::reference {
     class PauliExclusion: public Force {
     private:
         Topology const* top;
+        PseudoAtoms const* pseudoAtoms;
         Neighborhood const* excludedPairs;
         Real excludedRadius;
 
     public:
-        PauliExclusion(Topology const& top,
+        PauliExclusion(PseudoAtoms const& pseudoAtoms, Topology const& top,
             Real excludedRadius = 5.0*angstrom);
 
         void compute(Real &energy, Reals3 &forces) override;

@@ -14,7 +14,7 @@ target_sources(${Target}
     PRIVATE ${Sources})
 
 target_link_libraries(${Target}
-    PUBLIC Eigen3::Eigen base)
+    PUBLIC Eigen3::Eigen toolkit)
 
 target_include_directories(${Target}
     PUBLIC include)

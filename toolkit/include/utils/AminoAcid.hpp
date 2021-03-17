@@ -33,8 +33,8 @@ namespace cg::toolkit {
 
 namespace std {
     template<>
-    struct hash<cg::AminoAcid> {
-        size_t operator()(cg::AminoAcid const& aminoAcid) const {
+    struct hash<cg::toolkit::AminoAcid> {
+        size_t operator()(cg::toolkit::AminoAcid const& aminoAcid) const {
             return std::hash<char>()((char)aminoAcid);
         }
     };

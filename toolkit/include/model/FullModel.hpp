@@ -45,6 +45,6 @@ namespace cg::toolkit {
 
     private:
         /* Reduce into a CG::Chain. */
-        cg::Chain reduceChain(Chain const& chain) const;
+        cg::toolkit::Chain reduceChain(Chain const& chain) const;
     };
 }
