@@ -3,7 +3,7 @@
 #include "data/ModelData.hpp"
 #include "forces/local/HarmonicTethers.hpp"
 #include "forces/local/SimpleNativeDihedral.hpp"
-#include "forces/local/NativeBond.hpp"
+#include "forces/local/NativeBondAngle.hpp"
 #include "forces/nonlocal/NativeContacts.hpp"
 #include "forces/nonlocal/PauliExclusion.hpp"
 #include "integrators/LangevinPredictorCorrector.hpp"
@@ -25,7 +25,7 @@ int main() {
     SimpleNativeDihedral snd(md.pseudoAtoms, md.ns);
     lpc.attachForce(&snd);
 
-    NativeBond nb(md.pseudoAtoms, md.ns);
+    NativeBondAngle nb(md.pseudoAtoms, md.ns);
     lpc.attachForce(&nb);
 
     HarmonicTethers ht(md.pseudoAtoms, md.ns);
