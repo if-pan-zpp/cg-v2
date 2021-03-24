@@ -14,7 +14,7 @@ int main() {
     pdbFile.fullModel.deriveContactsFromAllAtoms(paramFile.parameters);
     auto model = pdbFile.fullModel.reduce();
 
-    for (int traj = 0; traj < 10; ++traj) {
+    for (int traj = 0; traj < 3; ++traj) {
         Simulation sim(model);
         ModelData const& modelData = sim.modelData;
         

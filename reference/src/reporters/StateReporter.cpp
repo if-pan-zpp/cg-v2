@@ -9,6 +9,9 @@ StateReporter::StateReporter(PseudoAtoms const& _pseudoAtoms) :
 
 void StateReporter::report(int step) {
     Real kin_energy = 0;
-    // TODO: calculate kinetic energy
+    Reals3 const& vel = pseudoAtoms.vel;
+    for (size_t i = 0; i < pseudoAtoms.n; ++i) {
+        kin_energy += 0.5 * pseudoAtoms.mass[i] * vel.col(i).squaredNorm();
+    }
     cout << "Step #" << step << ": kin_energy = " << kin_energy << endl;
 }

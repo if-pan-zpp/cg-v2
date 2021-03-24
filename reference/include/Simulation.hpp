@@ -20,7 +20,7 @@ namespace cg::reference {
         void run(int max_steps);
 
     private:
-        Real delta; // dt
+        Real delta = 0.005; // dt
         Reals3 forces;
         vector<Force*> forceObjects;
         vector<pair<Reporter*, int>> reporters;

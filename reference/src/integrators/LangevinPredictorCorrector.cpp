@@ -1,27 +1,30 @@
 #include "integrators/LangevinPredictorCorrector.hpp"
+#include <iostream>
+#include <random>
+using namespace std;
 using namespace cg::reference;
 
 LangevinPredictorCorrector::LangevinPredictorCorrector(PseudoAtoms &pseudoAtoms) { 
     n = pseudoAtoms.n;
-    for (size_t i = 0; i < K - 2; ++i) {
+    for (size_t i = 0; i < K - 1; ++i) {
         highDerivatives[i] = Reals3::Zero(3, n);
     }
     
     derivs[0] = &pseudoAtoms.pos;
     derivs[1] = &pseudoAtoms.vel;
-    for (size_t i = 0; i < K - 2; ++i) {
+    for (size_t i = 0; i < K - 1; ++i) {
         derivs[i + 2] = highDerivatives + i;
     }
 }
 
 Real normalDistribution() {
-    // TODO - add real normal distribution here
-    Real r1 = 0.5;
-    Real r2 = 0.6;
-    return sqrt(-2.0 * log(r1)) * cos(2 * M_PI * r2);
+    // TODO: add possibility to set seed
+    // TODO: add rand from cg.f for comparison
+    static mt19937 rng(0xC0FFEE);
+    return normal_distribution<double>(0.0, 1.0)(rng);
 }
 
-void LangevinPredictorCorrector::step(Real delta, Reals3 const& forces) {
+void LangevinPredictorCorrector::step(Real delta, Reals3 &forces) {
     Real temperature = 0.35; //TODO: get temperature from environment
 
     // Langevine dynamics
@@ -34,12 +37,13 @@ void LangevinPredictorCorrector::step(Real delta, Reals3 const& forces) {
     }
 
     *derivs[1] += const2 * noise;
-    *derivs[2] -= gamma2 * (*derivs[1]);
+    forces -= gamma2 * (*derivs[1]);
     
     // corrector:
     const Real deltsq = 0.5 * delta * delta;
 
-    const Real3 err = *derivs[2] - deltsq * forces;
+    const Reals3 err = *derivs[2] - deltsq * forces;
+
     for (int der_nr = 0; der_nr <= K; der_nr++) {
         *derivs[der_nr] -= err * pred_corr_params[der_nr];
     }
