@@ -1,19 +1,21 @@
 #include "forces/local/NativeBondAngle.hpp"
+#include <iostream>
 using namespace cg::reference;
 using namespace std;
 
-NativeBondAngle::NativeBondAngle(PseudoAtoms const& _pseudo_atoms,
+NativeBondAngle::NativeBondAngle(PseudoAtoms const& _pseudoAtoms,
                                  NativeStructure const& _ns):
-    pseudo_atoms(_pseudo_atoms),
+    pseudoAtoms(_pseudoAtoms),
     ns(_ns) {
 
+    cout << "n = " << pseudoAtoms.n << endl;
     // 'enable' vector specifies for which i's we should calculate
     // bond angle force
-    enabled = vector<unsigned char>(pseudo_atoms.n, 0);
+    enabled = vector<unsigned char>(pseudoAtoms.n, 0);
 
     // TODO: calculate 'enable' based on NativeStructure
 
-    native_theta = vector<Real>(pseudo_atoms.n, 0.);
+    nativeTheta = vector<Real>(pseudoAtoms.n, 0.);
 
     // TODO: calculate native_theta
 }
@@ -22,9 +24,9 @@ void NativeBondAngle::compute(Real &total_energy, Reals3 &forces) {
     Real energy = 0.;
 
     Eigen::Matrix3d d_theta_d_pos;
-    Reals3 const& pos = pseudo_atoms.pos;
+    Reals3 const& pos = pseudoAtoms.pos;
 
-    for (size_t i = 0; i < pseudo_atoms.n; ++i) {
+    for (size_t i = 0; i < pseudoAtoms.n; ++i) {
         if (enabled[i]) {
             Real3 v0 = pos.col(i + 1) - pos.col(i + 0);
             Real3 v1 = pos.col(i + 2) - pos.col(i + 1);
@@ -42,12 +44,12 @@ void NativeBondAngle::compute(Real &total_energy, Reals3 &forces) {
             d_theta_d_pos.col(1) = -grad0 - grad2;
             d_theta_d_pos.col(2) = grad2;
 
-            theta -= native_theta[i];
+            theta -= nativeTheta[i];
             energy += k * theta * theta;
 
             Real d_V_d_theta = 2.0 * k * theta;
 
-            forces.block<3,3>(i,0) -= d_V_d_theta * d_theta_d_pos;
+            forces.block<3,3>(0,i) -= d_V_d_theta * d_theta_d_pos;
         }
     }
 

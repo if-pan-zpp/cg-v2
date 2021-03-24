@@ -1,0 +1,53 @@
+#include "integrators/LangevinPredictorCorrector.hpp"
+using namespace cg::reference;
+
+LangevinPredictorCorrector::LangevinPredictorCorrector(PseudoAtoms &pseudoAtoms) { 
+    n = pseudoAtoms.n;
+    for (size_t i = 0; i < K - 2; ++i) {
+        highDerivatives[i] = Reals3::Zero(3, n);
+    }
+    
+    derivs[0] = &pseudoAtoms.pos;
+    derivs[1] = &pseudoAtoms.vel;
+    for (size_t i = 0; i < K - 2; ++i) {
+        derivs[i + 2] = highDerivatives + i;
+    }
+}
+
+Real normalDistribution() {
+    // TODO - add real normal distribution here
+    Real r1 = 0.5;
+    Real r2 = 0.6;
+    return sqrt(-2.0 * log(r1)) * cos(2 * M_PI * r2);
+}
+
+void LangevinPredictorCorrector::step(Real delta, Reals3 const& forces) {
+    Real temperature = 0.35; //TODO: get temperature from environment
+
+    // Langevine dynamics
+    const Real gamma2 = gamma / delta;
+    const Real const2 = sqrt(2 * temperature * gamma * delta) * delta;
+
+    Reals3 noise = Reals3::Zero(3, n);
+    for (size_t i = 0; i < 3 * n; ++i) {
+        noise(i) = normalDistribution();
+    }
+
+    *derivs[1] += const2 * noise;
+    *derivs[2] -= gamma2 * (*derivs[1]);
+    
+    // corrector:
+    const Real deltsq = 0.5 * delta * delta;
+
+    const Real3 err = *derivs[2] - deltsq * forces;
+    for (int der_nr = 0; der_nr <= K; der_nr++) {
+        *derivs[der_nr] -= err * pred_corr_params[der_nr];
+    }
+
+    // predictor:
+    for(int der_nr = 0; der_nr <= K; der_nr++) {
+        for(int next_der = der_nr + 1; next_der <= K; next_der++) {
+            *derivs[der_nr] += newton_symbol[der_nr][next_der] * *derivs[next_der];
+        }
+    }
+}

@@ -6,11 +6,11 @@
 namespace cg::reference {
     class StateReporter: public Reporter {
     private:
-        PseudoAtoms const* pseudoAtoms;
+        PseudoAtoms const& pseudoAtoms;
 
     public:
         StateReporter(PseudoAtoms const& pseudoAtoms);
 
-        void report() override;
+        void report(int step) override;
     };
 }

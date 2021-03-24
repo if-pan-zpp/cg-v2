@@ -1,11 +1,8 @@
 #include "loaders/PDBFile.hpp"
 #include "loaders/ParameterFile.hpp"
-#include "data/ModelData.hpp"
+#include "Simulation.hpp"
 #include "forces/local/HarmonicTethers.hpp"
-#include "forces/local/SimpleNativeDihedral.hpp"
 #include "forces/local/NativeBondAngle.hpp"
-#include "forces/nonlocal/NativeContacts.hpp"
-#include "forces/nonlocal/PauliExclusion.hpp"
 #include "integrators/LangevinPredictorCorrector.hpp"
 #include "reporters/StateReporter.hpp"
 using namespace cg::toolkit;
@@ -17,30 +14,31 @@ int main() {
     pdbFile.fullModel.deriveContactsFromAllAtoms(paramFile.parameters);
     auto model = pdbFile.fullModel.reduce();
 
-    ModelData md(model);
-    Topology top(md.pseudoAtoms, md.ns);
-    LangevinPredictorCorrector lpc;
-    StateReporter sr(md.pseudoAtoms);
-
-    SimpleNativeDihedral snd(md.pseudoAtoms, md.ns);
-    lpc.attachForce(&snd);
-
-    NativeBondAngle nb(md.pseudoAtoms, md.ns);
-    lpc.attachForce(&nb);
-
-    HarmonicTethers ht(md.pseudoAtoms, md.ns);
-    lpc.attachForce(&ht);
-
-    NativeContacts nc(md.ns, top);
-    lpc.attachForce(&nc);
-
-    PauliExclusion pe(md.pseudoAtoms, top);
-    lpc.attachForce(&pe);
-
     for (int traj = 0; traj < 10; ++traj) {
-        lpc.step(15000);
-        sr.report();
-    }
+        Simulation sim(model);
+        ModelData const& modelData = sim.modelData;
+        
 
+        // Create and set integrator
+        LangevinPredictorCorrector lpc(sim.modelData.pseudoAtoms);
+        sim.integrator = &lpc;
+
+
+        // Create and attach forces
+        NativeBondAngle nba(modelData.pseudoAtoms, modelData.ns);
+        sim.attachForce(&nba);
+
+        HarmonicTethers ht(modelData.pseudoAtoms, modelData.ns);
+        sim.attachForce(&ht);
+
+
+        // Create and attach reporters
+        StateReporter stateRep(modelData.pseudoAtoms);
+        sim.attachReporter(&stateRep, 200);
+
+
+        // Run the simulation
+        sim.run(10000);
+    }
     return 0;
 }

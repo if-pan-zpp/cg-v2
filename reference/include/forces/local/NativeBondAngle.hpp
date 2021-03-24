@@ -13,15 +13,15 @@ namespace cg::reference {
     public:
         Real k = 30.0*eps/(radian*radian);
 
-        NativeBondAngle(PseudoAtoms const& pseudo_atoms, NativeStructure const& ns);
+        NativeBondAngle(PseudoAtoms const& pseudoAtoms, NativeStructure const& ns);
 
         void compute(Real &energy, Reals3 &forces) override;
 
     private:
-        PseudoAtoms const& pseudo_atoms;
+        PseudoAtoms const& pseudoAtoms;
         NativeStructure const& ns;
 
         vector<unsigned char> enabled;
-        vector<Real> native_theta;
+        vector<Real> nativeTheta;
     };
 }

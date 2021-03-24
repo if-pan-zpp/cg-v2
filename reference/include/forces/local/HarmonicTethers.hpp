@@ -9,8 +9,8 @@ namespace cg::reference {
 
     class HarmonicTethers: public Force {
     private:
-        PseudoAtoms const* pseudoAtoms;
-        NativeStructure const* ns;
+        PseudoAtoms const& pseudoAtoms;
+        NativeStructure const& ns;
 
     public:
         Real default_dist0 = 3.8*angstrom;

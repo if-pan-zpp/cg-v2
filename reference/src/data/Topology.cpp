@@ -121,6 +121,10 @@ void Topology::update() {
         neighborhood.update();
 }
 
+void Topology::forceUpdate() {
+    // TODO
+}
+
 void Topology::updateCellSize(Real3 newCell) {
     bool pbcness_changed = false;
 

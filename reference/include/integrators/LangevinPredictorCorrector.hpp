@@ -9,17 +9,29 @@ namespace cg::reference {
     using namespace cg::toolkit;
 
     class LangevinPredictorCorrector: public Integrator {
-    private:
-        Real energy;
-        Reals3 atomForces;
-        std::vector<Force*> forceObjects;
-
     public:
-        Real dt = 0.005*nanosecond;
-        Real temperature; // What value?
-        LangevinPredictorCorrector();
+        LangevinPredictorCorrector(PseudoAtoms &pseudoAtoms);
+        void step(Real delta, Reals3 const& forces) override;
 
-        void attachForce(Force *force);
-        void step(int nsteps) override;
+        static constexpr int K = 5; // order of predictor corrector method
+        const Real gamma = 2.0;
+        
+    private:
+        size_t n; // number of pseudoAtoms
+        Reals3 *derivs[K + 1]; // derivatives of positions up to K'th order
+
+        // derivs[0] and derivs[1] point to pseudoAtoms.pos and pseudoAtoms.vel.
+        // All further derivatives are held here in highDerivatives.
+        Reals3 highDerivatives[K - 2];
+
+        const std::array<Real, K + 1> pred_corr_params =
+        {3./16,  251./360,  1.,  11./18,  1./6,  1./60};
+        const std::array<std::array<Real, K + 1>, K + 1> newton_symbol = 
+            {{{{1, 1, 1, 1, 1,  1}},
+            {{0, 1, 2, 3, 4,  5}},
+            {{0, 0, 1, 3, 6, 10}},
+            {{0, 0, 0, 1, 4, 10}},
+            {{0, 0, 0, 0, 1,  5}},
+            {{0, 0, 0, 0, 0,  1}}}};
     };
 }
