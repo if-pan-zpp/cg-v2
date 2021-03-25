@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include "reporters/Reporter.hpp"
 #include "data/PseudoAtoms.hpp"
 

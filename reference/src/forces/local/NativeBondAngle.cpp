@@ -1,5 +1,4 @@
 #include "forces/local/NativeBondAngle.hpp"
-#include <iostream>
 using namespace cg::reference;
 using namespace std;
 
@@ -8,7 +7,6 @@ NativeBondAngle::NativeBondAngle(PseudoAtoms const& _pseudoAtoms,
     pseudoAtoms(_pseudoAtoms),
     ns(_ns) {
 
-    cout << "n = " << pseudoAtoms.n << endl;
     // 'enable' vector specifies for which i's we should calculate
     // bond angle force
     enabled = vector<unsigned char>(pseudoAtoms.n, 0);

@@ -63,6 +63,8 @@ cg::toolkit::Chain FullModel::reduceChain(const FullModel::Chain &chain) const {
     cg::toolkit::Chain reduxChain;
     NativeStructure ns;
 
+    ns.offset = 0;
+
     Real3List CA;
     resizeVectorList(CA, chain.size());
 

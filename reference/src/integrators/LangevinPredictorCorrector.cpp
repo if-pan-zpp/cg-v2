@@ -1,5 +1,4 @@
 #include "integrators/LangevinPredictorCorrector.hpp"
-#include <iostream>
 #include <random>
 using namespace std;
 using namespace cg::reference;

@@ -1,5 +1,4 @@
 #include "Simulation.hpp"
-#include <iostream>
 using namespace cg::reference;
 using namespace std;
 
