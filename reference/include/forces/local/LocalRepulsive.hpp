@@ -7,18 +7,17 @@
 namespace cg::reference {
     using namespace cg::toolkit;
 
-    class HarmonicTethers: public Force {
+    class LocalRepulsive: public Force {
     private:
         PseudoAtoms const& pseudoAtoms;
         NativeStructure const& ns;
 
     public:
-        Real H1 = 100.0*eps/(angstrom*angstrom);
-        Real H2 = 0.0;
-        Real force_cap = 1000.0 * f77unit;
         bool enabled = true;
+        Real repulsive_cutoff = 5.0 * angstrom;
+        Real force_cap = 1000.0;
 
-        HarmonicTethers(PseudoAtoms const& pseudoAtoms, NativeStructure const& ns);
+        LocalRepulsive(PseudoAtoms const& pseudoAtoms, NativeStructure const& ns);
 
         void compute(Real &energy, Reals3 &forces) override;
     };
