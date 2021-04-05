@@ -9,15 +9,15 @@ LocalRepulsive::LocalRepulsive(PseudoAtoms const& _pseudoAtoms,
 }
 
 void LocalRepulsive::compute(Real &energy, Reals3 &forces) {
-    Reals3 forces_diff = Reals3::Zero(pseudoAtoms.n, 3);
-    const Reals3 &positions = pseudoAtoms.pos;
-    const Integers &chainId = ns.chainId;
     size_t residues = pseudoAtoms.n;
+    Reals3 forces_diff = Reals3::Zero(3, residues);
+    Reals3 const& positions = pseudoAtoms.pos;
+    Integers const& chainId = ns.chainId;
     Real energy_diff;
 
-    for(size_t i = 0; i < residues - 2; i++) {
+    for(size_t i = 0; i + 2 < residues; i++) {
         if(chainId[i] == chainId[i+1] && chainId[i+1] == chainId[i+2]) {
-            Real3 diff_vec = positions.row(i + 2) - positions.row(i);
+            Real3 diff_vec = positions.col(i + 2) - positions.col(i);
             Real dist = diff_vec.norm();
             Real sq_dist = dist * dist;
 
@@ -29,8 +29,8 @@ void LocalRepulsive::compute(Real &energy, Reals3 &forces) {
                 if (force > force_cap) force = force_cap;
                 if (force < -force_cap) force = -force_cap;
                 force /= -dist;
-                forces.row(i) -= diff_vec * force;
-                forces.row(i+2) += diff_vec * force;
+                forces.col(i) -= diff_vec * force;
+                forces.col(i+2) += diff_vec * force;
             }
         }
     }

@@ -9,10 +9,10 @@ HarmonicTethers::HarmonicTethers(PseudoAtoms const& _pseudoAtoms,
 }
 
 void HarmonicTethers::compute(Real &energy, Reals3 &forces) {
-    Reals3 forces_diff = Reals3::Zero(3, pseudoAtoms.n);
+    size_t residues = pseudoAtoms.n;
+    Reals3 forces_diff = Reals3::Zero(3, residues);
     Reals3 const& positions = pseudoAtoms.pos;
     Integers const& chainId = ns.chainId;
-    size_t residues = pseudoAtoms.n;
     Reals const& tether = ns.tether;
     Real energy_diff;
 

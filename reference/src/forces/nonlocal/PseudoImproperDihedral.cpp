@@ -9,10 +9,11 @@ PseudoImproperDihedral::PseudoImproperDihedral(PseudoAtoms const& _pseudoAtoms,
 }
 
 void PseudoImproperDihedral::compute(Real &energy, Reals3 &forces) {
-    Reals3 forces_diff = Reals3::Zero(pseudoAtoms.n, 3);
-    const Reals3 &positions = pseudoAtoms.pos;
-    std::vector<std::string> type = pseudoAtoms.type;
-    Pairs list = verlet_list.pairs;
+    size_t residues = pseudoAtoms.n;
+    Reals3 forces_diff = Reals3::Zero(3, residues);
+    Reals3 const& positions = pseudoAtoms.pos;
+    std::vector<std::string> const& type = pseudoAtoms.type;
+    Pairs const& list = verlet_list.pairs;
 
     for (auto it = list.begin(); it != list.end(); it++) {
         int i = it -> first;
@@ -24,7 +25,7 @@ void PseudoImproperDihedral::compute(Real &energy, Reals3 &forces) {
         eps_mj = 1.;
 
         // TODO implement PBC distance
-        Real3 diff_vec = positions.row(j) - positions.row(i);
+        Real3 diff_vec = positions.col(j) - positions.col(i);
         Real dist = diff_vec.norm();
         Real sq_dist = dist * dist;
 
@@ -48,9 +49,9 @@ void PseudoImproperDihedral::compute(Real &energy, Reals3 &forces) {
             int i2 = j;
             if(nr == 1) std::swap(i1,i2);
             // TODO check if i1-1, i1+1 etc. may be out of bounds
-            Real3 v1 = positions.row(i1) - positions.row(i1+1);
-            Real3 v2 = positions.row(i1-1) - positions.row(i1+1);
-            Real3 v3 = positions.row(i1-1) - positions.row(i2);
+            Real3 v1 = positions.col(i1) - positions.col(i1+1);
+            Real3 v2 = positions.col(i1-1) - positions.col(i1+1);
+            Real3 v3 = positions.col(i1-1) - positions.col(i2);
             Real3 v4 = v1.cross(v2);
             Real3 v5 = v2.cross(v3);
             Real v4_norm_sq = v4.dot(v4);
@@ -226,17 +227,17 @@ void PseudoImproperDihedral::compute(Real &energy, Reals3 &forces) {
         force /= -dist;
         Real3 rep = force * diff_vec;
 
-        forces_diff.row(i) += rep;
-        forces_diff.row(j) -= rep;
+        forces_diff.col(i) += rep;
+        forces_diff.col(j) -= rep;
 
         for(size_t nr = 0; nr <=1; nr++) {
             int i1 = i;
             int i2 = j;
             if(nr == 1) std::swap(i1,i2);
-            forces_diff.row(i1) -= dvdp[nr] * f_var[nr][0];
-            forces_diff.row(i1+1) -= dvdp[nr] * f_var[nr][1];
-            forces_diff.row(i1-1) -= dvdp[nr] * f_var[nr][2];
-            forces_diff.row(i2) -= dvdp[nr] * f_var[nr][3];
+            forces_diff.col(i1) -= dvdp[nr] * f_var[nr][0];
+            forces_diff.col(i1+1) -= dvdp[nr] * f_var[nr][1];
+            forces_diff.col(i1-1) -= dvdp[nr] * f_var[nr][2];
+            forces_diff.col(i2) -= dvdp[nr] * f_var[nr][3];
         }
     }
     forces += forces_diff;
