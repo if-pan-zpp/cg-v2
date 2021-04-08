@@ -15,7 +15,7 @@ namespace cg::reference {
         Results results;
         const Real delta = 0.001; // dt
 
-        Simulation(toolkit::Model const&);
+        Simulation(toolkit::Model const &);
 
         void attachForce(Force *);
         void attachReporter(Reporter *, int period = 1);

@@ -46,16 +46,16 @@ namespace cg::reference {
         Real3 cell, cell_inv; /* 0 means no PBC along that axis. */
 
     public:
-        Topology(PseudoAtoms const& pseudoAtoms, NativeStructure const& ns);
+        Topology(PseudoAtoms const &pseudoAtoms, NativeStructure const &ns);
 
         /* Get the neighborhood with specificed specs. */
-        Neighborhood const& createNeighborhood(Neighborhood::Spec const& spec);
+        Neighborhood const &createNeighborhood(Neighborhood::Spec const &spec);
 
         void updateCellSize(Real3 newCell);
 
         /* This is the vector from p to the closest image of q under the PBC
          * topology. */
-        Real3 offset(Real3 const& p, Real3 const& q) const;
+        Real3 offset(Real3 const &p, Real3 const &q) const;
 
         /* Check whether neighborhoods are still correct. If not, recompute
          * them. */

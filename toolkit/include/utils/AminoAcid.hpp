@@ -11,7 +11,7 @@ namespace cg::toolkit {
         /* We shall use implicit operators for brevity. */
         AminoAcid() = default;
         AminoAcid(char c);
-        AminoAcid(std::string const& s);
+        AminoAcid(std::string const &s);
 
         explicit operator char() const;
         explicit operator std::string() const;
@@ -20,7 +20,7 @@ namespace cg::toolkit {
         static std::vector<std::string> allNames;
         static int numAminoAcids;
 
-        bool operator==(AminoAcid const& aminoAcid2) const;
+        bool operator==(AminoAcid const &aminoAcid2) const;
 
     private:
         static std::unordered_map<std::string, char> nameToCode;
@@ -34,7 +34,7 @@ namespace cg::toolkit {
 namespace std {
     template<>
     struct hash<cg::toolkit::AminoAcid> {
-        size_t operator()(cg::toolkit::AminoAcid const& aminoAcid) const {
+        size_t operator()(cg::toolkit::AminoAcid const &aminoAcid) const {
             return std::hash<char>()((char)aminoAcid);
         }
     };

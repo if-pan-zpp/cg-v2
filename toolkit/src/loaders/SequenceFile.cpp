@@ -3,13 +3,13 @@
 using namespace cg::toolkit;
 using namespace std;
 
-SequenceFile::SequenceFile(filesystem::path const& path) {
+SequenceFile::SequenceFile(filesystem::path const &path) {
     auto file = ifstream(path);
     int nchains;
     file >> nchains;
 
     for (Index i = 0; i < nchains; ++i) {
-        auto& chain = model.chains[i];
+        auto &chain = model.chains[i];
         NativeStructure ns;
 
         /* Load residue codes. */
@@ -38,7 +38,7 @@ SequenceFile::SequenceFile(filesystem::path const& path) {
                 mapFiles[contactMapPath] = ContactMapFile(contactMapFile);
             }
 
-            auto const& contactMap = mapFiles[contactMapPath];
+            auto const &contactMap = mapFiles[contactMapPath];
             chain.structuredParts.push_back(contactMap.ns);
         }
     }

@@ -6,13 +6,13 @@
 namespace cg::reference {
     class StateReporter: public Reporter {
     public:
-        StateReporter(PseudoAtoms const& pseudoAtoms, Results const& results, Real delta);
+        StateReporter(PseudoAtoms const &pseudoAtoms, Results const &results, Real delta);
 
         void report(int step) override;
 
     private:
         Real delta;
-        PseudoAtoms const& pseudoAtoms;
-        Results const& results;
+        PseudoAtoms const &pseudoAtoms;
+        Results const &results;
     };
 }

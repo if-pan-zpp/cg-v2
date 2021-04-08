@@ -18,7 +18,7 @@ namespace cg::reference {
         Real excludedRadius;
 
     public:
-        PauliExclusion(PseudoAtoms const& pseudoAtoms, Topology const& top,
+        PauliExclusion(PseudoAtoms const &pseudoAtoms, Topology const &top,
             Real excludedRadius = 5.0*angstrom);
 
         void compute(Real &energy, Reals3 &forces) override;

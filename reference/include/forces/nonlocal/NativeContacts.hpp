@@ -14,7 +14,7 @@ namespace cg::reference {
     public:
         Real depth = 1.0;
 
-        NativeContacts(NativeStructure const& ns, Topology const& top);
+        NativeContacts(NativeStructure const &ns, Topology const &top);
 
         void compute(Real &energy, Reals3 &forces) override;
     };

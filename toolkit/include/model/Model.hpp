@@ -12,7 +12,7 @@ namespace cg::toolkit {
         Model() = default;
 
         /* Construct a model from a single chain. */
-        explicit Model(Chain const& chain);
+        explicit Model(Chain const &chain);
 
         /* Model = a set of chains plus (possibly) extra structure.
          * We use a map in order to easily add/remove chains.
@@ -29,13 +29,13 @@ namespace cg::toolkit {
         std::vector<Contact> contacts;
 
         /* Operators for a disjoint sum of models. */
-        Model& operator+=(Model const& model2);
-        Model operator+(Model const& model2) const;
+        Model &operator+=(Model const &model2);
+        Model operator+(Model const &model2) const;
 
         /* Apply an affine transform to the entire model. */
-        void apply(RealAffine3 const& aff);
+        void apply(RealAffine3 const &aff);
 
         /* Derive a contact map from only CA atom positions. */
-        void deriveContactsFromCaAtoms(Parameters const& parameters);
+        void deriveContactsFromCaAtoms(Parameters const &parameters);
     };
 }

@@ -10,9 +10,9 @@ namespace cg::reference {
 
     class PseudoImproperDihedral: public Force {
     private:
-        PseudoAtoms const& pseudoAtoms;
-        NativeStructure const& ns;
-        Neighborhood const& verlet_list;
+        PseudoAtoms const &pseudoAtoms;
+        NativeStructure const &ns;
+        Neighborhood const &verlet_list;
 
     public:
         bool enabled = false;
@@ -43,8 +43,8 @@ namespace cg::reference {
         Real min_lambda = 0.00005;
         Real min_norm = 0.01;
 
-        PseudoImproperDihedral(PseudoAtoms const& pseudoAtoms, NativeStructure const& ns, 
-                                Neighborhood const& verlet_list);
+        PseudoImproperDihedral(PseudoAtoms const &pseudoAtoms, NativeStructure const &ns, 
+                                Neighborhood const &verlet_list);
 
         void compute(Reals3 &forces) override;
     };

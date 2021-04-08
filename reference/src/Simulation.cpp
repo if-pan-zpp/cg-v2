@@ -2,7 +2,7 @@
 using namespace cg::reference;
 using namespace std;
 
-Simulation::Simulation(toolkit::Model const& model):
+Simulation::Simulation(toolkit::Model const &model):
     modelData(model),
     topology(modelData.pseudoAtoms, modelData.ns) {
     

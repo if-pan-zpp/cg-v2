@@ -1,19 +1,19 @@
 #include "forces/nonlocal/PseudoImproperDihedral.hpp"
 using namespace cg::reference;
 
-PseudoImproperDihedral::PseudoImproperDihedral(PseudoAtoms const& _pseudoAtoms,
-                                 NativeStructure const& _ns, Neighborhood const& _verlet_list):
-    pseudoAtoms(_pseudoAtoms),
-    ns(_ns),
-    verlet_list(_verlet_list) {
+PseudoImproperDihedral::PseudoImproperDihedral(PseudoAtoms const &_pseudoAtoms,
+                                 NativeStructure const &_ns, Neighborhood const &_verlet_list):
+    pseudoAtoms(pseudoAtoms),
+    ns(ns),
+    verlet_list(verlet_list) {
 }
 
 void PseudoImproperDihedral::compute(Reals3 &forces) {
     size_t residues = pseudoAtoms.n;
     Reals3 forces_diff = Reals3::Zero(3, residues);
-    Reals3 const& positions = pseudoAtoms.pos;
-    std::vector<std::string> const& type = pseudoAtoms.type;
-    Pairs const& list = verlet_list.pairs;
+    Reals3 const &positions = pseudoAtoms.pos;
+    std::vector<std::string> const &type = pseudoAtoms.type;
+    Pairs const &list = verlet_list.pairs;
 
     for (auto it = list.begin(); it != list.end(); it++) {
         int i = it -> first;

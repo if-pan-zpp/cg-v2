@@ -4,7 +4,7 @@
 using namespace cg::reference;
 using namespace std;
 
-StateReporter::StateReporter(PseudoAtoms const& _pseudoAtoms,
+StateReporter::StateReporter(PseudoAtoms const &_pseudoAtoms,
                              Results const &_results,
                              Real _delta) :
     pseudoAtoms(_pseudoAtoms),
@@ -14,7 +14,7 @@ StateReporter::StateReporter(PseudoAtoms const& _pseudoAtoms,
 
 void StateReporter::report(int step) {
     Real kinEnergy = 0;
-    Reals3 const& vel = pseudoAtoms.vel;
+    Reals3 const &vel = pseudoAtoms.vel;
     for (size_t i = 0; i < pseudoAtoms.n; ++i) {
         kinEnergy += 0.5 * pseudoAtoms.mass[i] * vel.col(i).squaredNorm();
     }

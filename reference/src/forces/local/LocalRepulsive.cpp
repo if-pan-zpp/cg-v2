@@ -1,8 +1,8 @@
 #include "forces/local/LocalRepulsive.hpp"
 using namespace cg::reference;
 
-LocalRepulsive::LocalRepulsive(PseudoAtoms const& _pseudoAtoms,
-                                 NativeStructure const& _ns):
+LocalRepulsive::LocalRepulsive(PseudoAtoms const &_pseudoAtoms,
+                                 NativeStructure const &_ns):
     pseudoAtoms(_pseudoAtoms),
     ns(_ns) {
     
@@ -11,8 +11,8 @@ LocalRepulsive::LocalRepulsive(PseudoAtoms const& _pseudoAtoms,
 void LocalRepulsive::compute(Reals3 &forces) {
     size_t residues = pseudoAtoms.n;
     Reals3 forces_diff = Reals3::Zero(3, residues);
-    Reals3 const& positions = pseudoAtoms.pos;
-    Integers const& chainId = ns.chainId;
+    Reals3 const &positions = pseudoAtoms.pos;
+    Integers const &chainId = ns.chainId;
     Real energy_diff;
 
     for(size_t i = 0; i + 2 < residues; i++) {

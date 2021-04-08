@@ -9,6 +9,6 @@ namespace cg::reference {
         PseudoAtoms pseudoAtoms;
         NativeStructure ns;
 
-        ModelData(toolkit::Model const& model);
+        ModelData(toolkit::Model const &model);
     };
 }

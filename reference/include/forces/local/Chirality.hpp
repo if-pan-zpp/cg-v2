@@ -12,8 +12,8 @@ namespace cg::reference {
 
     public:
         Real echi = 1.0;
-        Chirality(PseudoAtoms const& pseudoAtoms, NativeStructure const& ns);
+        Chirality(PseudoAtoms const &pseudoAtoms, NativeStructure const &ns);
 
-        void compute(Real& energy, Reals3& forces) override;
+        void compute(Real &energy, Reals3 &forces) override;
     };
 }

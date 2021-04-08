@@ -7,8 +7,8 @@ namespace cg::toolkit {
     class ContactMapFile {
     public:
         ContactMapFile() = default;
-        explicit ContactMapFile(std::istream& file);
-        explicit ContactMapFile(std::filesystem::path const& path);
+        explicit ContactMapFile(std::istream &file);
+        explicit ContactMapFile(std::filesystem::path const &path);
         NativeStructure ns;
     };
 }

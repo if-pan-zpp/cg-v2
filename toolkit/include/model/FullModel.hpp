@@ -31,20 +31,20 @@ namespace cg::toolkit {
         std::vector<Contact> contacts;
 
         /* Operators for a disjoint union of full models. */
-        FullModel& operator+=(FullModel const& fullModel2);
-        FullModel operator+(FullModel const& fullModel2) const;
+        FullModel &operator+=(FullModel const &fullModel2);
+        FullModel operator+(FullModel const &fullModel2) const;
 
         /* Apply an affine transform. */
-        void apply(RealAffine3 const& aff);
+        void apply(RealAffine3 const &aff);
 
         /* Reduce into a Model. */
         Model reduce() const;
 
         /* Derive a contact map from full atomic data. */
-        void deriveContactsFromAllAtoms(Parameters const& parameters);
+        void deriveContactsFromAllAtoms(Parameters const &parameters);
 
     private:
         /* Reduce into a CG::Chain. */
-        cg::toolkit::Chain reduceChain(Chain const& chain) const;
+        cg::toolkit::Chain reduceChain(Chain const &chain) const;
     };
 }

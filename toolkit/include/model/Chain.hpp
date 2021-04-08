@@ -25,6 +25,6 @@ namespace cg::toolkit {
         void intoSAW();
 
         /* Apply an affine transform to the chain. */
-        void apply(RealAffine3 const& aff);
+        void apply(RealAffine3 const &aff);
     };
 }

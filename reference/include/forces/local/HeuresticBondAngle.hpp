@@ -21,7 +21,9 @@ namespace cg::reference {
         Params params;
 
     public:
-        HeuresticBondAngle(PseudoAtoms const& pseudoAtoms, NativeStructure const& ns, Params const& params);
+        HeuresticBondAngle(PseudoAtoms const &pseudoAtoms,
+                           NativeStructure const &ns,
+                           Params const &params);
 
         void compute(Real &energy, Reals3 &forces) override;
     };

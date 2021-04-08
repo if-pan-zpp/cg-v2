@@ -9,15 +9,15 @@ namespace cg::reference {
 
     class LocalRepulsive: public Force {
     private:
-        PseudoAtoms const& pseudoAtoms;
-        NativeStructure const& ns;
+        PseudoAtoms const &pseudoAtoms;
+        NativeStructure const &ns;
 
     public:
         bool enabled = true;
         Real repulsive_cutoff = 5.0 * angstrom;
         Real force_cap = 1000.0;
 
-        LocalRepulsive(PseudoAtoms const& pseudoAtoms, NativeStructure const& ns);
+        LocalRepulsive(PseudoAtoms const &pseudoAtoms, NativeStructure const &ns);
 
         void compute(Reals3 &forces) override;
     };

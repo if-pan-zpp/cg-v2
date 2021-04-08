@@ -3,8 +3,8 @@
 using namespace cg::reference;
 using namespace std;
 
-HarmonicTethers::HarmonicTethers(PseudoAtoms const& _pseudoAtoms,
-                                 NativeStructure const& _ns):
+HarmonicTethers::HarmonicTethers(PseudoAtoms const &_pseudoAtoms,
+                                 NativeStructure const &_ns):
     pseudoAtoms(_pseudoAtoms),
     ns(_ns) {
     
@@ -13,9 +13,9 @@ HarmonicTethers::HarmonicTethers(PseudoAtoms const& _pseudoAtoms,
 void HarmonicTethers::compute(Reals3 &forces) {
     size_t residues = pseudoAtoms.n;
     Reals3 forces_diff = Reals3::Zero(3, residues);
-    Reals3 const& positions = pseudoAtoms.pos;
-    Integers const& chainId = ns.chainId;
-    Reals const& tether = ns.tether;
+    Reals3 const &positions = pseudoAtoms.pos;
+    Integers const &chainId = ns.chainId;
+    Reals const &tether = ns.tether;
     energy = 0.0;
 
     for(size_t i = 0; i+1 < residues; i++) {

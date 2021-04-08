@@ -15,14 +15,14 @@ Neighborhood::Neighborhood(Topology *top, Neighborhood::Spec spec) {
     auto minDistSq = spec.cutoff + 2.0 * spec.pad;
     minDistSq *= minDistSq;
 
-    for (auto const& [type1, type2]: spec.pairTypes) {
+    for (auto const &[type1, type2]: spec.pairTypes) {
         int exclusionIx = 0;
         auto range1 = top->pseudoAtoms->typeRanges.at(type1);
         auto range2 = top->pseudoAtoms->typeRanges.at(type2);
         if (range1.first > range2.first)
             swap(range1, range2);
-        auto& [start1, end1] = range1;
-        auto& [start2, end2] = range2;
+        auto &[start1, end1] = range1;
+        auto &[start2, end2] = range2;
 
         /* Note: naive implementation */
         for (int ix1 = start1; ix1 < end1; ++ix1) {
@@ -70,7 +70,7 @@ void Neighborhood::updateMaxCorrectDist() {
 
     Real maxDisplacement = 0.0;
     unordered_set<string> types;
-    for (auto const& [type1, type2]: spec.pairTypes) {
+    for (auto const &[type1, type2]: spec.pairTypes) {
         types.insert(type1);
         types.insert(type2);
     }
@@ -102,7 +102,7 @@ void Neighborhood::forceUpdate() {
     *this = Neighborhood(top, spec);
 }
 
-Neighborhood const& Topology::createNeighborhood(const Neighborhood::Spec &spec) {
+Neighborhood const &Topology::createNeighborhood(const Neighborhood::Spec &spec) {
     return neighborhoods.emplace_back(this, spec);
 }
 
@@ -117,7 +117,7 @@ Real3 Topology::offset(const Real3 &p, const Real3 &q) const {
 }
 
 void Topology::update() {
-    for (auto& neighborhood: neighborhoods)
+    for (auto &neighborhood: neighborhoods)
         neighborhood.update();
 }
 
@@ -143,7 +143,7 @@ void Topology::updateCellSize(Real3 newCell) {
         forceUpdate();
 }
 
-Topology::Topology(PseudoAtoms const& pseudoAtoms, NativeStructure const& ns) {
+Topology::Topology(PseudoAtoms const &pseudoAtoms, NativeStructure const &ns) {
     this->pseudoAtoms = &pseudoAtoms;
     this->ns = &ns;
 }

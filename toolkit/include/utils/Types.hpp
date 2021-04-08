@@ -28,7 +28,7 @@ namespace cg::toolkit {
     /* List resizing shorthand; technically the list is a matrix,
        so it's not as straightforward as we'd wish. Also,
        Note: this invalidates the list. */
-    inline void resizeVectorList(Real3List& list, size_t n) {
+    inline void resizeVectorList(Real3List &list, size_t n) {
         list.resize(Eigen::NoChange_t(), n);
     }
 }

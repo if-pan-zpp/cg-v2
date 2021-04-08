@@ -2,8 +2,8 @@
 using namespace cg::reference;
 using namespace std;
 
-NativeBondAngle::NativeBondAngle(PseudoAtoms const& _pseudoAtoms,
-                                 NativeStructure const& _ns):
+NativeBondAngle::NativeBondAngle(PseudoAtoms const &_pseudoAtoms,
+                                 NativeStructure const &_ns):
     pseudoAtoms(_pseudoAtoms),
     ns(_ns) {
 
@@ -23,7 +23,7 @@ void NativeBondAngle::compute(Reals3 &forces) {
     energy = 0.;
 
     Eigen::Matrix3d d_theta_d_pos;
-    Reals3 const& pos = pseudoAtoms.pos;
+    Reals3 const &pos = pseudoAtoms.pos;
 
     for (size_t i = 0; i < pseudoAtoms.n; ++i) {
         if (enabled[i]) {

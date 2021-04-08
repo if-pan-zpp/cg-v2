@@ -4,7 +4,7 @@ using namespace cg::toolkit;
 using namespace std;
 
 /* A helper for passing AminoAcid. */
-static pair<AminoAcid, string> p(string const& aminoAcid, string const& name) {
+static pair<AminoAcid, string> p(string const &aminoAcid, string const &name) {
     return make_pair(AminoAcid(aminoAcid), name);
 }
 
@@ -12,7 +12,7 @@ Parameters::Parameters() {
     defaultEquilibriumDistance = 3.8 * angstrom;
     nativeContactCutoff = 0.0;
 
-    for (auto const& aminoAcid: AminoAcid::allNames) {
+    for (auto const &aminoAcid: AminoAcid::allNames) {
         atomRadii[p(aminoAcid, "N")] = 1.64;
         atomRadii[p(aminoAcid, "CA")] = 1.88;
         atomRadii[p(aminoAcid, "C")] = 1.61;
@@ -131,7 +131,7 @@ Parameters::Parameters() {
 
     /* Also, since the values are in multiples of 5 A, we need to
      * adjust these values. */
-    for (auto& [name, radius]: atomRadii) {
+    for (auto &[name, radius]: atomRadii) {
         radius *= f77unit;
     }
 }

@@ -16,7 +16,7 @@ int main() {
 
     for (int traj = 0; traj < 1; ++traj) {
         Simulation sim(model);
-        ModelData const& modelData = sim.modelData;
+        ModelData const &modelData = sim.modelData;
         
         // Create and set integrator
         LangevinPredictorCorrector lpc(sim.delta, sim.modelData.pseudoAtoms);

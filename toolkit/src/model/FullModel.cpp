@@ -8,7 +8,7 @@ FullModel &FullModel::operator+=(const FullModel &fullModel2) {
     auto offset = chains.size();
 
     /* Load chains. */
-    for (auto const& [chainId, chain]: fullModel2.chains) {
+    for (auto const &[chainId, chain]: fullModel2.chains) {
         chains[offset + chainId] = chain;
     }
 
@@ -29,9 +29,9 @@ FullModel FullModel::operator+(const FullModel &fullModel2) const {
 }
 
 void FullModel::apply(const RealAffine3 &aff) {
-    for (auto& [chainId, chain]: chains) {
-        for (auto& residue: chain) {
-            for (auto& [name, pos]: residue.atoms) {
+    for (auto &[chainId, chain]: chains) {
+        for (auto &residue: chain) {
+            for (auto &[name, pos]: residue.atoms) {
                 pos = aff * pos;
             }
         }
@@ -42,12 +42,12 @@ Model FullModel::reduce() const {
     Model redux;
 
     /* Reduce the chains. */
-    for (auto const& [chainId, chain]: chains) {
+    for (auto const &[chainId, chain]: chains) {
         redux.chains[chainId] = reduceChain(chain);
     }
 
     /* Contacts stay essentially the same. */
-    for (auto const& contact: contacts) {
+    for (auto const &contact: contacts) {
         redux.contacts.push_back((Model::Contact) {
             .res1 = contact.res1,
             .res2 = contact.res2,
@@ -105,26 +105,26 @@ void FullModel::deriveContactsFromAllAtoms(const Parameters &parameters) {
      * (yet, anyways). */
 
     /* Over chains. */
-    for (auto const& [i1, chain1]: chains) {
-        for (auto const& [i2, chain2]: chains) {
+    for (auto const &[i1, chain1]: chains) {
+        for (auto const &[i2, chain2]: chains) {
             if (i2 > i1) continue;
 
             /* Over residues. */
             for (Index j1 = 0; j1 < chain1.size(); ++j1) {
-                auto& res1 = chain1[j1];
+                auto &res1 = chain1[j1];
 
                 Index j2 = (i1 == i2 ? j1 + 3 : 0);
                 for (; j2 < chain2.size(); ++j2) {
-                    auto& res2 = chain2[j2];
+                    auto &res2 = chain2[j2];
 
                     /* Over atoms. */
-                    for (auto const& [name1, pos1]: res1.atoms) {
+                    for (auto const &[name1, pos1]: res1.atoms) {
                         if (parameters.atomRadii.count({res1.type, name1}) == 0)
                             continue;
                         auto radius1 = parameters.atomRadii.at({res1.type, name1});
                         char type1 = backbone.find(name1) == backbone.end() ? 'b' : 's';
 
-                        for (auto const& [name2, pos2]: res2.atoms) {
+                        for (auto const &[name2, pos2]: res2.atoms) {
                             if (parameters.atomRadii.count({res2.type, name2}) == 0)
                                 continue;
                             auto radius2 = parameters.atomRadii.at({res2.type, name2});
