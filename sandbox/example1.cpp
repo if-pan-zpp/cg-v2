@@ -14,31 +14,28 @@ int main() {
     pdbFile.fullModel.deriveContactsFromAllAtoms(paramFile.parameters);
     auto model = pdbFile.fullModel.reduce();
 
-    for (int traj = 0; traj < 3; ++traj) {
+    for (int traj = 0; traj < 1; ++traj) {
         Simulation sim(model);
         ModelData const& modelData = sim.modelData;
         
-
         // Create and set integrator
-        LangevinPredictorCorrector lpc(sim.modelData.pseudoAtoms);
+        LangevinPredictorCorrector lpc(sim.delta, sim.modelData.pseudoAtoms);
         sim.integrator = &lpc;
 
 
         // Create and attach forces
-        NativeBondAngle nba(modelData.pseudoAtoms, modelData.ns);
-        sim.attachForce(&nba);
-
+        // NativeBondAngle nba(modelData.pseudoAtoms, modelData.ns);
+        // sim.attachForce(&nba);
+        
         HarmonicTethers ht(modelData.pseudoAtoms, modelData.ns);
         sim.attachForce(&ht);
 
-
         // Create and attach reporters
-        StateReporter stateRep(modelData.pseudoAtoms);
+        StateReporter stateRep(modelData.pseudoAtoms, sim.results, sim.delta);
         sim.attachReporter(&stateRep, 200);
 
-
         // Run the simulation
-        sim.run(10000);
+        sim.run(100000);
     }
     return 0;
 }

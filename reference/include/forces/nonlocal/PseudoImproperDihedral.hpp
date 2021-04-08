@@ -46,6 +46,6 @@ namespace cg::reference {
         PseudoImproperDihedral(PseudoAtoms const& pseudoAtoms, NativeStructure const& ns, 
                                 Neighborhood const& verlet_list);
 
-        void compute(Real &energy, Reals3 &forces) override;
+        void compute(Reals3 &forces) override;
     };
 }

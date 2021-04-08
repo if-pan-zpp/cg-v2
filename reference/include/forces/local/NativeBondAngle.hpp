@@ -15,7 +15,8 @@ namespace cg::reference {
 
         NativeBondAngle(PseudoAtoms const& pseudoAtoms, NativeStructure const& ns);
 
-        void compute(Real &energy, Reals3 &forces) override;
+        void compute(Reals3 &forces) override;
+        void dumpResults(Results &results) override;
 
     private:
         PseudoAtoms const& pseudoAtoms;
@@ -23,5 +24,6 @@ namespace cg::reference {
 
         vector<unsigned char> enabled;
         vector<Real> nativeTheta;
+        Real energy;
     };
 }

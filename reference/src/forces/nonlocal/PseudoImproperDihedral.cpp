@@ -8,7 +8,7 @@ PseudoImproperDihedral::PseudoImproperDihedral(PseudoAtoms const& _pseudoAtoms,
     verlet_list(_verlet_list) {
 }
 
-void PseudoImproperDihedral::compute(Real &energy, Reals3 &forces) {
+void PseudoImproperDihedral::compute(Reals3 &forces) {
     size_t residues = pseudoAtoms.n;
     Reals3 forces_diff = Reals3::Zero(3, residues);
     Reals3 const& positions = pseudoAtoms.pos;

@@ -7,19 +7,20 @@ NativeBondAngle::NativeBondAngle(PseudoAtoms const& _pseudoAtoms,
     pseudoAtoms(_pseudoAtoms),
     ns(_ns) {
 
-    // 'enable' vector specifies for which i's we should calculate
-    // bond angle force
+    // 'enabled' vector specifies for which i's
+    // we should calculate bond angle force
     enabled = vector<unsigned char>(pseudoAtoms.n, 0);
 
-    // TODO: calculate 'enable' based on NativeStructure
+    // TODO: calculate 'enabled' based on NativeStructure
+    for (size_t i = 0; i + 2 < pseudoAtoms.n; ++i) enabled[i] = 1;
 
     nativeTheta = vector<Real>(pseudoAtoms.n, 0.);
 
     // TODO: calculate native_theta
 }
 
-void NativeBondAngle::compute(Real &total_energy, Reals3 &forces) {
-    Real energy = 0.;
+void NativeBondAngle::compute(Reals3 &forces) {
+    energy = 0.;
 
     Eigen::Matrix3d d_theta_d_pos;
     Reals3 const& pos = pseudoAtoms.pos;
@@ -50,6 +51,8 @@ void NativeBondAngle::compute(Real &total_energy, Reals3 &forces) {
             forces.block<3,3>(0,i) -= d_V_d_theta * d_theta_d_pos;
         }
     }
+}
 
-    total_energy += energy;
+void NativeBondAngle::dumpResults(Results &results) {
+    results.potEnergy += energy;
 }

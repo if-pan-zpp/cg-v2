@@ -8,7 +8,7 @@ LocalRepulsive::LocalRepulsive(PseudoAtoms const& _pseudoAtoms,
     
 }
 
-void LocalRepulsive::compute(Real &energy, Reals3 &forces) {
+void LocalRepulsive::compute(Reals3 &forces) {
     size_t residues = pseudoAtoms.n;
     Reals3 forces_diff = Reals3::Zero(3, residues);
     Reals3 const& positions = pseudoAtoms.pos;
@@ -36,5 +36,4 @@ void LocalRepulsive::compute(Real &energy, Reals3 &forces) {
     }
 
     forces += forces_diff;
-    energy += energy_diff;
 }

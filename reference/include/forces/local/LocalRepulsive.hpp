@@ -19,6 +19,6 @@ namespace cg::reference {
 
         LocalRepulsive(PseudoAtoms const& pseudoAtoms, NativeStructure const& ns);
 
-        void compute(Real &energy, Reals3 &forces) override;
+        void compute(Reals3 &forces) override;
     };
 }

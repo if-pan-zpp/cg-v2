@@ -3,6 +3,7 @@
 #include "data/Topology.hpp"
 #include "forces/Force.hpp"
 #include "reporters/Reporter.hpp"
+#include "data/Results.hpp"
 using namespace std;
 
 namespace cg::reference {
@@ -11,6 +12,8 @@ namespace cg::reference {
         ModelData modelData;
         Topology topology;
         Integrator *integrator = 0;
+        Results results;
+        const Real delta = 0.001; // dt
 
         Simulation(toolkit::Model const&);
 
@@ -20,11 +23,11 @@ namespace cg::reference {
         void run(int max_steps);
 
     private:
-        Real delta = 0.005; // dt
         Reals3 forces;
         vector<Force*> forceObjects;
         vector<pair<Reporter*, int>> reporters;
 
-        void calc_forces();
+        void calcForces();
+        void dumpResults();
     };
 }

@@ -13,6 +13,7 @@ ModelData::ModelData(Model const& model) {
     pseudoAtoms.n = n;
     pseudoAtoms.pos = Reals3::Zero(3, n);
     pseudoAtoms.vel = Reals3::Zero(3, n);
+    pseudoAtoms.vel(0) = 0.001; // give the first residue a nudge (so that initial energy is not 0)
 
     // TODO: get pseudoatoms' masses
     pseudoAtoms.mass = Reals::Ones(n);

@@ -3,7 +3,8 @@
 using namespace std;
 using namespace cg::reference;
 
-LangevinPredictorCorrector::LangevinPredictorCorrector(PseudoAtoms &pseudoAtoms) { 
+LangevinPredictorCorrector::LangevinPredictorCorrector(Real delta, PseudoAtoms &pseudoAtoms)
+    : delta(delta) { 
     n = pseudoAtoms.n;
     for (size_t i = 0; i < K - 1; ++i) {
         highDerivatives[i] = Reals3::Zero(3, n);
@@ -23,7 +24,11 @@ Real normalDistribution() {
     return normal_distribution<double>(0.0, 1.0)(rng);
 }
 
-void LangevinPredictorCorrector::step(Real delta, Reals3 &forces) {
+void LangevinPredictorCorrector::init(Reals3 &forces) {
+    *derivs[2] = forces * (0.5 * delta * delta);
+}
+
+void LangevinPredictorCorrector::step(Reals3 &forces) {
     Real temperature = 0.35; //TODO: get temperature from environment
 
     // Langevine dynamics

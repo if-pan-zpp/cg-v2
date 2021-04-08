@@ -6,6 +6,6 @@ SimpleNativeDihedral::SimpleNativeDihedral(PseudoAtoms const& pseudo_atoms,
 
 }
 
-void SimpleNativeDihedral::compute(Real &energy, Reals3 &forces) {
+void SimpleNativeDihedral::compute(Reals3 &forces) {
 
 }
