@@ -4,6 +4,7 @@
 #include "forces/local/HarmonicTethers.hpp"
 #include "forces/local/NativeBondAngle.hpp"
 #include "forces/nonlocal/PauliExclusion.hpp"
+#include "forces/nonlocal/NativeContacts.hpp"
 #include "integrators/LangevinPredictorCorrector.hpp"
 #include "reporters/StateReporter.hpp"
 using namespace cg::toolkit;
@@ -45,6 +46,9 @@ int main() {
         PauliExclusion pe(modelData.pseudoAtoms, sim.topology, verletList); 
         sim.attachForce(&pe);
 
+        NativeContacts nc(modelData.pseudoAtoms, modelData.ns, sim.topology, 5.0 * angstrom);
+        sim.attachForce(&nc);
+        
         // Create and attach reporters
         StateReporter stateRep(modelData.pseudoAtoms, sim.results, sim.delta);
         sim.attachReporter(&stateRep, 200);

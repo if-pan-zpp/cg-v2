@@ -19,6 +19,10 @@ ModelData::ModelData(Model const &model) {
     // TODO: get pseudoatoms' masses
     pseudoAtoms.mass = Reals::Ones(n);
 
+    pseudoAtoms.type = vector<string>(n, "NORMAL");
+    pseudoAtoms.typeRanges["NORMAL"] = {0, n};
+
+
     ns.tether = -Reals::Ones(n); // -1 means undefined tether
 
     size_t patom_id = 0;
@@ -37,12 +41,15 @@ ModelData::ModelData(Model const &model) {
             for (size_t i = 0; i < tns.tether.cols(); ++i) {
                 ns.tether(tns.offset + i) = tns.tether(i);
             }
+
+            for (toolkit::NativeStructure::Contact const &contact : tns.contacts) {
+                ns.contacts.push_back(NativeStructure::Contact {
+                        .residues = contact.residues,
+                        .distance = contact.distance
+                });
+            }
         }
     }
-
-    pseudoAtoms.type = vector<string>(n, "NORMAL");
-    pseudoAtoms.typeRanges["NORMAL"] = {0, n};
-    
 
     // TODO: get the rest of pseudoatoms fields
 

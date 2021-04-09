@@ -129,9 +129,9 @@ Parameters::Parameters() {
     atomRadii[p("LEU", "CD1")] = 1.88;
     atomRadii[p("LEU", "CD2")] = 1.88;
 
-    /* Also, since the values are in multiples of 5 A, we need to
+    /* Also, since the values are in angstroms, we need to
      * adjust these values. */
     for (auto &[name, radius]: atomRadii) {
-        radius *= f77unit;
+        radius *= angstrom;
     }
 }

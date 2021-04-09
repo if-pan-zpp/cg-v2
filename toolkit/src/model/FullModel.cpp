@@ -38,12 +38,12 @@ void FullModel::apply(const RealAffine3 &aff) {
     }
 }
 
-Model FullModel::reduce() const {
+Model FullModel::reduce() {
     Model redux;
 
     /* Reduce the chains. */
     for (auto const &[chainId, chain]: chains) {
-        redux.chains[chainId] = reduceChain(chain);
+        redux.chains[chainId] = reduceChain(chain, intraChainContacts[chainId]);
     }
 
     /* Contacts stay essentially the same. */
@@ -59,7 +59,10 @@ Model FullModel::reduce() const {
     return redux;
 }
 
-cg::toolkit::Chain FullModel::reduceChain(const FullModel::Chain &chain) const {
+cg::toolkit::Chain FullModel::reduceChain(
+    FullModel::Chain const &chain,
+    unordered_set<IndexPair> const &intraContacts) const {
+
     cg::toolkit::Chain reduxChain;
     NativeStructure ns;
 
@@ -90,6 +93,14 @@ cg::toolkit::Chain FullModel::reduceChain(const FullModel::Chain &chain) const {
     ns.dihedral.resize(chain.size());
     for (Index i = 2; i+1 < chain.size(); ++i) {
         ns.dihedral(i) = dihedral(CA.col(i-2), CA.col(i-1), CA.col(i), CA.col(i+1));
+    }
+
+    /* Store intra chain contacts. */
+    for (auto const &[i, j] : intraContacts) {
+        ns.contacts.emplace_back(NativeStructure::Contact {
+                .residues = make_pair(i, j),
+                .distance = (CA.col(j) - CA.col(i)).norm()
+        });
     }
 
     reduxChain.positions = move(CA);
@@ -132,13 +143,17 @@ void FullModel::deriveContactsFromAllAtoms(const Parameters &parameters) {
 
                             /* Check if in contact. */
                             auto dist = (pos2 - pos1).norm();
-                            if (radius1 + radius2 > dist*alpha) {
+                            if (dist < alpha * (radius1 + radius2)) {
                                 contacts.push_back((Contact) {
                                     .res1 = {i1, j1},
                                     .res2 = {i2, j2},
                                     .distance = dist,
                                     .type = string(1, type1) + string(1, type2),
                                 });
+
+                                if (i1 == i2) {
+                                    intraChainContacts[i1].insert({j1, j2});
+                                }
                             }
                         }
                     }
