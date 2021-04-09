@@ -1,6 +1,7 @@
 #include "data/ModelData.hpp"
 using namespace cg::reference;
 using namespace cg::toolkit;
+using namespace std;
 
 ModelData::ModelData(Model const &model) {
     size_t n = 0;
@@ -38,6 +39,10 @@ ModelData::ModelData(Model const &model) {
             }
         }
     }
+
+    pseudoAtoms.type = vector<string>(n, "NORMAL");
+    pseudoAtoms.typeRanges["NORMAL"] = {0, n};
+    
 
     // TODO: get the rest of pseudoatoms fields
 

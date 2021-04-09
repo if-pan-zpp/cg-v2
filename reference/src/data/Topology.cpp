@@ -103,7 +103,10 @@ void Neighborhood::forceUpdate() {
 }
 
 Neighborhood const &Topology::createNeighborhood(const Neighborhood::Spec &spec) {
-    return neighborhoods.emplace_back(this, spec);
+    unique_ptr<Neighborhood> new_nei = make_unique<Neighborhood>(this, spec);
+    Neighborhood const &ref = *new_nei;
+    neighborhoods.push_back(move(new_nei));
+    return ref;
 }
 
 Real3 Topology::offset(const Real3 &p, const Real3 &q) const {
@@ -118,7 +121,7 @@ Real3 Topology::offset(const Real3 &p, const Real3 &q) const {
 
 void Topology::update() {
     for (auto &neighborhood: neighborhoods)
-        neighborhood.update();
+        neighborhood -> update();
 }
 
 void Topology::forceUpdate() {

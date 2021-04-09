@@ -40,6 +40,7 @@ void Simulation::run(int max_steps) {
     for (int step = 0; step < max_steps; ++step) {
         // TODO: add a possibility to break here
 
+        topology.update();
         calcForces();
         dumpResults();
         integrator -> step(forces);

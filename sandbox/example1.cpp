@@ -3,6 +3,7 @@
 #include "Simulation.hpp"
 #include "forces/local/HarmonicTethers.hpp"
 #include "forces/local/NativeBondAngle.hpp"
+#include "forces/nonlocal/PauliExclusion.hpp"
 #include "integrators/LangevinPredictorCorrector.hpp"
 #include "reporters/StateReporter.hpp"
 using namespace cg::toolkit;
@@ -22,13 +23,27 @@ int main() {
         LangevinPredictorCorrector lpc(sim.delta, sim.modelData.pseudoAtoms);
         sim.integrator = &lpc;
 
-
+        // Create verlet list
+        vector<pair<int, int>> exclusions;
+        Neighborhood::Spec spec {
+                .minLocalOffset = 3,
+                .include4 = true,
+                .exclusions = &exclusions,
+                .pairTypes = {{"NORMAL", "NORMAL"}},
+                .cutoff = 5.0 * angstrom,
+                .pad = 15.0 * angstrom
+        };
+        Neighborhood const &verletList = sim.topology.createNeighborhood(spec);
+        
         // Create and attach forces
-        // NativeBondAngle nba(modelData.pseudoAtoms, modelData.ns);
-        // sim.attachForce(&nba);
+        NativeBondAngle nba(modelData.pseudoAtoms, modelData.ns);
+        sim.attachForce(&nba);
         
         HarmonicTethers ht(modelData.pseudoAtoms, modelData.ns);
         sim.attachForce(&ht);
+
+        PauliExclusion pe(modelData.pseudoAtoms, sim.topology, verletList); 
+        sim.attachForce(&pe);
 
         // Create and attach reporters
         StateReporter stateRep(modelData.pseudoAtoms, sim.results, sim.delta);

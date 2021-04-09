@@ -4,6 +4,7 @@
 #include "data/NativeStructure.hpp"
 #include <vector>
 #include <functional>
+#include <memory>
 
 namespace cg::reference {
     class Topology;
@@ -31,14 +32,15 @@ namespace cg::reference {
 
     public:
         Pairs pairs;
-        Real3 startPos, startCell;
+        Reals3 startPos;
+        Real3 startCell;
         Real maxCorrectDist;
     };
 
     class Topology {
     private:
         friend class Neighborhood;
-        std::vector<Neighborhood> neighborhoods;
+        std::vector<std::unique_ptr<Neighborhood>> neighborhoods;
 
         PseudoAtoms const* pseudoAtoms;
         NativeStructure const* ns;
