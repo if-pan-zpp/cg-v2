@@ -35,6 +35,9 @@ void Simulation::dumpResults() {
 void Simulation::run(int max_steps) {
     assert(integrator);
 
+    // TODO: get real temperature value
+    modelData.pseudoAtoms.initMovement(rng, 0.35, delta);
+
     calcForces();
     integrator -> init(forces);
     
