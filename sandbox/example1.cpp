@@ -21,7 +21,7 @@ int main() {
         ModelData const &modelData = sim.modelData;
         
         // Create and set integrator
-        LangevinPredictorCorrector lpc(sim.delta, sim.modelData.pseudoAtoms);
+        LangevinPredictorCorrector lpc(sim.delta, sim.modelData.pseudoAtoms, sim.rng);
         sim.integrator = &lpc;
 
         // Create verlet list

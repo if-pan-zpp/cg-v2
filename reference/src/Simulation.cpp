@@ -2,7 +2,8 @@
 using namespace cg::reference;
 using namespace std;
 
-Simulation::Simulation(toolkit::Model const &model):
+Simulation::Simulation(toolkit::Model const &model, unsigned seed):
+    rng(seed),
     modelData(model),
     topology(modelData.pseudoAtoms, modelData.ns) {
     

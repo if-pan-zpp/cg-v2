@@ -4,21 +4,23 @@
 #include "forces/Force.hpp"
 #include "data/PseudoAtoms.hpp"
 #include "utils/Units.hpp"
+#include "utils/RNG.hpp"
 
 namespace cg::reference {
     using namespace cg::toolkit;
 
     class LangevinPredictorCorrector: public Integrator {
     public:
-        LangevinPredictorCorrector(Real delta, PseudoAtoms &pseudoAtoms);
+        LangevinPredictorCorrector(Real delta, PseudoAtoms &pseudoAtoms, RNG &rng);
         void init(Reals3 &forces) override;
         void step(Reals3 &forces) override;
 
         static constexpr int K = 5; // order of predictor corrector method
-        const Real gamma = 0.0; //noise turned off, original value is 2.0
+        const Real gamma = 0.0; // noise turned off, original value is 2.0
 
     private:
         const Real delta;
+        RNG &rng;
         size_t n; // number of pseudoAtoms
         Reals3 *derivs[K + 1]; // derivatives of positions up to K'th order
 

@@ -3,8 +3,11 @@
 using namespace std;
 using namespace cg::reference;
 
-LangevinPredictorCorrector::LangevinPredictorCorrector(Real delta, PseudoAtoms &pseudoAtoms)
-    : delta(delta) { 
+LangevinPredictorCorrector::LangevinPredictorCorrector(Real delta,
+                                                       PseudoAtoms &pseudoAtoms,
+                                                       RNG &rng)
+    : delta(delta), rng(rng) {
+
     n = pseudoAtoms.n;
     for (size_t i = 0; i < K - 1; ++i) {
         highDerivatives[i] = Reals3::Zero(3, n);
@@ -15,13 +18,6 @@ LangevinPredictorCorrector::LangevinPredictorCorrector(Real delta, PseudoAtoms &
     for (size_t i = 0; i < K - 1; ++i) {
         derivs[i + 2] = highDerivatives + i;
     }
-}
-
-Real normalDistribution() {
-    // TODO: add possibility to set seed
-    // TODO: add rand from cg.f for comparison
-    static mt19937 rng(0xC0FFEE);
-    return normal_distribution<double>(0.0, 1.0)(rng);
 }
 
 void LangevinPredictorCorrector::init(Reals3 &forces) {
@@ -37,7 +33,7 @@ void LangevinPredictorCorrector::step(Reals3 &forces) {
 
     Reals3 noise = Reals3::Zero(3, n);
     for (size_t i = 0; i < 3 * n; ++i) {
-        noise(i) = normalDistribution();
+        noise(i) = rng.normal();
     }
 
     *derivs[1] += const2 * noise;
