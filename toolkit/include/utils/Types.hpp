@@ -19,6 +19,8 @@ namespace cg::toolkit {
     using Real3 = Vec<3, Real>;
     using Real3List = VecList<3, Real>;
     using RealAffine3 = Eigen::Transform<Real, 3, Eigen::Affine>;
+    using Real3_3 = Eigen::Matrix<Real, 3, 3>;
+    using Reals3_3 = std::vector<Real3_3>;
 
     /* Note: in 3.4 version of Eigen, there is better indexing facilities. */
     using Index = unsigned;
