@@ -33,7 +33,7 @@ void PseudoAtoms::initMovement(RNG &rng, Real temperature, Real delta) {
 
     for (size_t i = 0; i < n; ++i) {
         tot_mass += mass[i];
-        tot_momentum += mass[i] * vel;
+        tot_momentum += mass[i] * vel.col(i);
     }
     for (size_t i = 0; i < n; ++i) {
         vel.col(i) -= tot_momentum * (1.0 / tot_mass);
