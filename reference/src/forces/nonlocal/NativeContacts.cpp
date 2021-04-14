@@ -22,12 +22,15 @@ NativeContacts::NativeContacts(PseudoAtoms const &pseudoAtoms,
 void NativeContacts::compute(Reals3 &forces) {
     Reals3 const &pos = pseudoAtoms.pos;
     energy = 0.;
+    activeContacts = 0;
 
     for (Contact const &contact : contacts) {
         Reals3 diff_vec = top.offset(pos.col(contact.i), pos.col(contact.j));
 
         Real sq_dist = diff_vec.squaredNorm();
         if (sq_dist > sq_cutoff) continue;
+
+        activeContacts++;
 
         Real dist = sqrt(sq_dist);
         Real sigma_by_dist_6 = pow(contact.sigma / dist, 6.); //TODO: check assembly
@@ -46,4 +49,5 @@ void NativeContacts::compute(Reals3 &forces) {
 
 void NativeContacts::dumpResults(Results &results) {
     results.potEnergy += energy;
+    results.activeContacts += activeContacts;
 }

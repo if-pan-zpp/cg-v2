@@ -35,6 +35,7 @@ namespace cg::reference {
         vector<Contact> contacts;
 
         Real energy;
+        unsigned activeContacts;
     };
 }
 

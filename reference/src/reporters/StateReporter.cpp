@@ -24,5 +24,6 @@ void StateReporter::report(int step) {
     cout << "Step #" << setw(6) << step
          << ": kinEnergy = " << setw(8) << kinEnergy
          << ": totEnergy = " << setw(8) << totEnergy
+         << ": actContacts = " << results.activeContacts
          << endl;
 }
