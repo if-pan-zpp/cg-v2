@@ -30,6 +30,14 @@ void Chain::intoSAW(bool dense, bool use_pbc, Real initial_density, Real cutoff,
     }
     bool conf_correct = false;
 
+
+    // TODO: we should only do this in the structured case
+    bond_length = 0.0;
+    for (size_t i = 0; i + 1 < n; ++i) {
+        bond_length += (positions.col(i + 1) - positions.col(i)).norm();
+    }
+    bond_length /= n - 1;
+
     Reals3_3 T;
     T.resize(n, Real3_3::Zero());
     Real3List R = Real3List::Zero(3, n);
@@ -41,7 +49,7 @@ void Chain::intoSAW(bool dense, bool use_pbc, Real initial_density, Real cutoff,
     theta[0] = 0.;
     phi[1] = 0.;
     theta[1] = rng.uniform() * M_PI / 3.;
-    for(size_t i = 2; i < n; i++) {
+    for(size_t i = 2; i + 1 < n; i++) {
         phi[i] = (2. * rng.uniform() - 1.) * M_PI;
         theta[i] = rng.uniform() * M_PI / 3.;
     }
@@ -74,18 +82,18 @@ void Chain::intoSAW(bool dense, bool use_pbc, Real initial_density, Real cutoff,
     for(size_t i = 0; i < n; i++) {
         positions.col(i) = ran;
         for(size_t j = 0; j < i; j++)
-            positions.col(i) += R.col(i);
+            positions.col(i) += R.col(j);
     }
 
     for(size_t i = 0; i + 3 < n; i++) {
-        for(size_t j = i + 3; i < n; j++) {
+        for(size_t j = i + 3; j < n; j++) {
             Real3 diff_vec = positions.col(j) - positions.col(i);
             if(use_pbc) {
                 for (int d = 0; d < 3; ++d) 
                     diff_vec(d) -= cell(d)*(int)(diff_vec(d)*cell_inv(d));
             }
-            Real dist = diff_vec.norm();
-            if(dist < cutoff * cutoff) {
+            Real sq_dist = diff_vec.squaredNorm();
+            if(sq_dist < cutoff * cutoff) {
                 SAW_attempts_left--;
                 if(SAW_attempts_left > 0) { // creation failed, retry
                     intoSAW(dense, use_pbc, initial_density, cutoff, rng);
