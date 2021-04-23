@@ -54,7 +54,7 @@ namespace cg::toolkit {
         static constexpr Real
             EPS = 1.2e-7,
             RNMX = 1. - EPS,
-            AM = 1. / IM1;
+            AM = (float) 1./IM1;
 
         int iy = 0,
             idum2 = 123456789,

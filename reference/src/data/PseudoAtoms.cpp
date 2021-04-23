@@ -1,4 +1,5 @@
 #include "data/PseudoAtoms.hpp"
+#include "utils/Units.hpp"
 using namespace cg::reference;
 using cg::toolkit::RNG;
 
@@ -19,13 +20,13 @@ Real3 normalVector(RNG &rng) {
 void PseudoAtoms::initMovement(RNG &rng, Real temperature, Real delta) {
     #ifdef LEGACY_MODE
         // In cg.f:intvel3d residues' masses aren't considered, so we shadow them
-        vector<Real> mass(n, 1.0);
+        vector<Real> mass(n, 1.0 * toolkit::f77mass);
     #endif
 
     for (size_t i = 0; i < n; ++i) {
         vel.col(i) = normalVector(rng);
     }
-    
+
     // Shifting velocities so that total momentum is 0
     
     Real tot_mass = 0.0;

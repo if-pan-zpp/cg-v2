@@ -1,4 +1,5 @@
 #include "data/ModelData.hpp"
+#include "utils/Units.hpp"
 using namespace cg::reference;
 using namespace cg::toolkit;
 using namespace std;
@@ -16,7 +17,7 @@ ModelData::ModelData(Model const &model) {
     pseudoAtoms.vel = Reals3::Zero(3, n);
 
     // TODO: get pseudoatoms' masses
-    pseudoAtoms.mass = Reals::Ones(n);
+    pseudoAtoms.mass = Reals::Ones(n) * f77mass;
 
     pseudoAtoms.type = vector<string>(n, "NORMAL");
     pseudoAtoms.typeRanges["NORMAL"] = {0, n};

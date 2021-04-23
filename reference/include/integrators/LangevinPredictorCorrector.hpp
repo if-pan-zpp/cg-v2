@@ -23,6 +23,7 @@ namespace cg::reference {
         RNG &rng;
         size_t n; // number of pseudoAtoms
         Reals3 *derivs[K + 1]; // derivatives of positions up to K'th order
+        Reals masses;
 
         // derivs[0] and derivs[1] point to pseudoAtoms.pos and pseudoAtoms.vel.
         // All further derivatives are held here in highDerivatives.

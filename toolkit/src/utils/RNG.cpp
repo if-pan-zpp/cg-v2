@@ -5,6 +5,7 @@ using namespace cg::toolkit;
 
 RNG::RNG(unsigned seed) {
     idum = -(int) seed;
+    for (size_t i = 0; i < NTAB; ++i) iv[i] = 0;
 }
 
 Real RNG::ran2() {

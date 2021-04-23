@@ -10,14 +10,14 @@ using namespace std;
 namespace cg::reference {
     class Simulation {
     public:
-        cg::toolkit::RNG rng;
+        toolkit::RNG &rng;
         ModelData modelData;
         Topology topology;
         Integrator *integrator = 0;
         Results results;
-        const Real delta = 0.001; // dt
+        const Real delta = 0.005 * toolkit::nanosecond; // dt
 
-        Simulation(toolkit::Model const &, unsigned seed = 448u);
+        Simulation(toolkit::Model const &, toolkit::RNG &);
 
         void attachForce(Force *);
         void attachReporter(Reporter *, int period = 1);

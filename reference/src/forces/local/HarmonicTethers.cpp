@@ -12,7 +12,6 @@ HarmonicTethers::HarmonicTethers(PseudoAtoms const &_pseudoAtoms,
 
 void HarmonicTethers::compute(Reals3 &forces) {
     size_t residues = pseudoAtoms.n;
-    Reals3 forces_diff = Reals3::Zero(3, residues);
     Reals3 const &positions = pseudoAtoms.pos;
     Integers const &chainId = ns.chainId;
     Reals const &tether = ns.tether;
@@ -26,18 +25,16 @@ void HarmonicTethers::compute(Reals3 &forces) {
             Real sq_dist_change = dist_change * dist_change;
 
             energy += (H1 + H2 * sq_dist_change) * sq_dist_change;
-            Real force = (2 * H1 + 4 * H2 * sq_dist_change) * dist_change;
+            Real force = -(2 * H1 + 4 * H2 * sq_dist_change) * dist_change;
 
             if(force > force_cap) force = force_cap;
             else if(force < -force_cap) force = -force_cap;
 
-            force /= -dist;
-            forces_diff.col(i) -= diff_vec * force;
-            forces_diff.col(i+1) += diff_vec * force;
+            force /= dist;
+            forces.col(i) -= diff_vec * force;
+            forces.col(i+1) += diff_vec * force;
         }
     }
-
-    forces += forces_diff;
 }
 
 void HarmonicTethers::dumpResults(Results &results) {

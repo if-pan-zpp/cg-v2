@@ -16,6 +16,6 @@ namespace cg::reference {
         // This method initializes velocities of residues, so that
         // the momentum is 0 and the average kinetic energy
         // corresponds to temperature (given in eps/kB units).
-        void initMovement(cg::toolkit::RNG &rng, Real temperature, Real delta);
+        void initMovement(toolkit::RNG &rng, Real temperature, Real delta);
     };
 }

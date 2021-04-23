@@ -9,6 +9,7 @@ LangevinPredictorCorrector::LangevinPredictorCorrector(Real delta,
     : delta(delta), rng(rng) {
 
     n = pseudoAtoms.n;
+    masses = pseudoAtoms.mass;
     for (size_t i = 0; i < K - 1; ++i) {
         highDerivatives[i] = Reals3::Zero(3, n);
     }
@@ -21,11 +22,15 @@ LangevinPredictorCorrector::LangevinPredictorCorrector(Real delta,
 }
 
 void LangevinPredictorCorrector::init(Reals3 &forces) {
+    for (size_t i = 0; i < n; ++i) {
+        forces.col(i) /= masses(i);
+    }
+
     *derivs[2] = forces * (0.5 * delta * delta);
 }
 
 void LangevinPredictorCorrector::step(Reals3 &forces) {
-    Real temperature = 0.35; //TODO: get temperature from environment
+    Real temperature = 0.35 * toolkit::epsDivkB; //TODO: get temperature from environment
 
     // Langevine dynamics
     const Real gamma2 = gamma / delta;
@@ -41,6 +46,10 @@ void LangevinPredictorCorrector::step(Reals3 &forces) {
     
     // corrector:
     const Real deltsq = 0.5 * delta * delta;
+
+    for (size_t i = 0; i < n; ++i) {
+        forces.col(i) /= masses(i);
+    }
 
     const Reals3 err = *derivs[2] - deltsq * forces;
 

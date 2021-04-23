@@ -1,12 +1,15 @@
 #include "Simulation.hpp"
 using namespace cg::reference;
+using namespace cg::toolkit;
 using namespace std;
 
-Simulation::Simulation(toolkit::Model const &model, unsigned seed):
-    rng(seed),
+Simulation::Simulation(toolkit::Model const &model, toolkit::RNG &rng) :
+    rng(rng),
     modelData(model),
     topology(modelData.pseudoAtoms, modelData.ns) {
     
+    // TODO: get real temperature value
+    modelData.pseudoAtoms.initMovement(rng, 0.35 * epsDivkB, delta);
 }
 
 void Simulation::attachForce(Force *force) {
@@ -35,13 +38,15 @@ void Simulation::dumpResults() {
 void Simulation::run(int max_steps) {
     assert(integrator);
 
-    // TODO: get real temperature value
-    modelData.pseudoAtoms.initMovement(rng, 0.35, delta);
-
     calcForces();
+    dumpResults();
     integrator -> init(forces);
     
-    for (int step = 0; step < max_steps; ++step) {
+    for (const pair<Reporter*, int>& rep_and_period: reporters) {
+        rep_and_period.first -> report(0);
+    }
+
+    for (int step = 1; step <= max_steps; ++step) {
         // TODO: add a possibility to break here
 
         topology.update();
@@ -55,6 +60,5 @@ void Simulation::run(int max_steps) {
                 rep_and_period.first -> report(step);
             }
         }
-
     }
 }
