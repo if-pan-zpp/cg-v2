@@ -1,6 +1,5 @@
 #include "forces/nonlocal/PauliExclusion.hpp"
 using namespace cg::reference;
-using namespace std;
 
 PauliExclusion::PauliExclusion(PseudoAtoms const &pseudoAtoms,
                                Topology const &top,
@@ -27,8 +26,8 @@ void PauliExclusion::compute(Reals3 &forces) {
             Real dist = sqrt(sq_dist);
             Real rsi = sigma / dist;
             Real r6 = pow(rsi, 6); // TODO: check the assembly here
-            energy += 4. * r6 * (r6 - 1.) + 1.;
-            Real force = -24. * r6 * (1. - 2. * r6) / dist;
+            energy += 4. * eps * r6 * (r6 - 1.) + 1.;
+            Real force = -24. * eps * r6 * (1. - 2. * r6) / dist;
 
             if (force > force_cap) force = force_cap;
             if (force < -force_cap) force = -force_cap;

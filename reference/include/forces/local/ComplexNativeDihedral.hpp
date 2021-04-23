@@ -15,10 +15,11 @@ namespace cg::reference {
      * variants because of the hyperparameters. */
     class ComplexNativeDihedral : public Force {
     public:
-        Real K1 = 0.33 * eps/(radian*radian);
-        Real K3 = 0.33 * eps/(radian*radian);
+        Real K1 = 0.66 * eps;
+        Real K3 = 0.66 * eps;
 
-        ComplexNativeDihedral(PseudoAtoms const &pseudoAtoms, NativeStructure const &ns);
+        ComplexNativeDihedral(PseudoAtoms const &pseudoAtoms,
+                              NativeStructure const &ns);
 
         void compute(Reals3 &forces) override;
         void dumpResults(Results &results) override;

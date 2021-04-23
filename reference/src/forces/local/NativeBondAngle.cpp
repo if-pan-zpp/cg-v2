@@ -1,20 +1,21 @@
 #include "forces/local/NativeBondAngle.hpp"
 using namespace cg::reference;
-using namespace std;
 
-NativeBondAngle::NativeBondAngle(PseudoAtoms const &_pseudoAtoms,
-                                 NativeStructure const &_ns):
-    pseudoAtoms(_pseudoAtoms),
-    ns(_ns) {
+NativeBondAngle::NativeBondAngle(PseudoAtoms const &pseudoAtoms,
+                                 NativeStructure const &ns):
+    pseudoAtoms(pseudoAtoms),
+    ns(ns) {
 
     // 'enabled' vector specifies for which i's
     // we should calculate bond angle force
     enabled = vector<unsigned char>(pseudoAtoms.n, 0);
+    nativeTheta = vector<Real>(pseudoAtoms.n, 0.);
 
     // TODO: calculate 'enabled' based on NativeStructure
-    for (size_t i = 0; i + 2 < pseudoAtoms.n; ++i) enabled[i] = 1;
-
-    nativeTheta = vector<Real>(pseudoAtoms.n, 0.);
+    for (size_t i = 0; i + 2 < pseudoAtoms.n; ++i) {
+        enabled[i] = 1;
+        nativeTheta[i] = ns.bond(i + 1);
+    }
 
     // TODO: calculate native_theta
 }

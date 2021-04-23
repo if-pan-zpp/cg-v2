@@ -8,13 +8,13 @@ ComplexNativeDihedral::ComplexNativeDihedral(PseudoAtoms const &pseudoAtoms,
     // 'enabled' vector specifies for which i's
     // we should calculate dihedral angle force
     enabled = vector<unsigned char>(pseudoAtoms.n, 0);
-
-    // TODO: calculate 'enabled' based on NativeStructure
-    for (size_t i = 0; i + 3 < pseudoAtoms.n; ++i) enabled[i] = 1;
-
     nativePhi = vector<Real>(pseudoAtoms.n, 0.);
 
-    // TODO: calculate nativePhi
+    // TODO: do this in the general case
+    for (size_t i = 0; i + 3 < pseudoAtoms.n; ++i) {
+        enabled[i] = 1;
+        nativePhi[i] = ns.dihedral(i + 2);
+    }
 }
 
 void ComplexNativeDihedral::compute(Reals3 &forces) {

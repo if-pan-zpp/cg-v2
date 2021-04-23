@@ -25,7 +25,7 @@ namespace cg::reference {
         Topology const &top;
 
         const Real depth = 1. * eps;
-        const Real force_cap = 1000. * eps/f77unit;
+        const Real force_cap = 200. * eps/angstrom;
         const Real sq_cutoff;
 
         struct Contact {

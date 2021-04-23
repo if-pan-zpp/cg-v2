@@ -16,7 +16,7 @@ namespace cg::reference {
         void step(Reals3 &forces) override;
 
         static constexpr int K = 5; // order of predictor corrector method
-        const Real gamma = 0.0; // noise turned off, original value is 2.0
+        const Real gamma = 2.0 * f77mass / tau;
 
     private:
         const Real delta;

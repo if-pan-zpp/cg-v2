@@ -27,7 +27,7 @@ namespace cg::reference {
 
         const Real excludedRadius;
         const Real sq_cutoff; // = excludedRadius ^ 2
-        const Real force_cap = 1000.0 * eps / f77unit;
+        const Real force_cap = 200.0 * eps / angstrom;
 
         Real energy;
     };
