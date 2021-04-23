@@ -13,12 +13,15 @@ namespace cg::reference {
         NativeStructure const &ns;
 
     public:
-        bool enabled = true;
-        Real repulsive_cutoff = 5.0 * angstrom;
-        Real force_cap = 1000.0;
+        const Real repulsive_cutoff = 5.0 * angstrom;
+        const Real sigma = repulsive_cutoff / pow(2., 1./6.);
+        const Real force_cap = 200.0 * eps / angstrom;
 
         LocalRepulsive(PseudoAtoms const &pseudoAtoms, NativeStructure const &ns);
 
+        Real energy;
+
         void compute(Reals3 &forces) override;
+        void dumpResults(Results &results) override;
     };
 }
