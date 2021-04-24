@@ -9,6 +9,7 @@ namespace cg::reference {
         StateReporter(PseudoAtoms const &pseudoAtoms, Results const &results, Real delta);
 
         void report(int step) override;
+        double calculateAsphericity();
 
     private:
         Real delta;
