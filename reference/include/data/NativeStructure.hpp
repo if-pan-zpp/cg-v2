@@ -13,7 +13,6 @@ namespace cg::reference {
         Pairs ssbonds, nativeParts;
         Integers isNative;
         Reals bond, dihedral, tether;
-        Integers chainId;
         Pairs chains;
     };
 }

@@ -26,11 +26,11 @@ Neighborhood::Neighborhood(Topology *top, Neighborhood::Spec spec) {
 
         /* Note: naive implementation */
         for (int ix1 = start1; ix1 < end1; ++ix1) {
-            auto chain1 = top->ns->chainId.at(ix1);
+            auto chain1 = top->pseudoAtoms->chainId.at(ix1);
             auto pos1 = top->pseudoAtoms->pos.col(ix1);
 
             for (int ix2 = (type1 == type2 ? ix1 : start2); ix2 < end2; ++ix2) {
-                auto chain2 = top->ns->chainId.at(ix2);
+                auto chain2 = top->pseudoAtoms->chainId.at(ix2);
                 auto pos2 = top->pseudoAtoms->pos.col(ix2);
 
                 /* Distance exclusion */

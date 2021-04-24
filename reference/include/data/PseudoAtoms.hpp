@@ -10,6 +10,7 @@ namespace cg::reference {
         Reals3 pos;   // positions of pseudoatoms
         Reals3 vel;   // velocities of pseudoatoms multiplied by delta
         Reals mass, mass_inv, charge;
+        Integers chainId;
         std::vector<std::string> type;
         std::unordered_map<std::string, std::pair<int, int>> typeRanges;
 

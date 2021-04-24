@@ -33,7 +33,7 @@ ModelData::ModelData(Model const &model) {
         
         for (size_t i = 0; i < chain.positions.cols(); ++i) {
             pseudoAtoms.pos.col(patom_id) = chain.positions.col(i);
-            ns.chainId.push_back(id_and_chain.first);
+            pseudoAtoms.chainId.push_back(id_and_chain.first);
 
             patom_id++;
         }

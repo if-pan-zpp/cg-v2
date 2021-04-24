@@ -13,7 +13,7 @@ HarmonicTethers::HarmonicTethers(PseudoAtoms const &_pseudoAtoms,
 void HarmonicTethers::compute(Reals3 &forces) {
     size_t residues = pseudoAtoms.n;
     Reals3 const &positions = pseudoAtoms.pos;
-    Integers const &chainId = ns.chainId;
+    Integers const &chainId = pseudoAtoms.chainId;
     Reals const &tether = ns.tether;
     energy = 0.0;
 

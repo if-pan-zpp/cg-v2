@@ -10,14 +10,13 @@ namespace cg::reference {
     class LocalRepulsive: public Force {
     private:
         PseudoAtoms const &pseudoAtoms;
-        NativeStructure const &ns;
 
     public:
         const Real repulsive_cutoff = 5.0 * angstrom;
         const Real sigma = repulsive_cutoff / pow(2., 1./6.);
         const Real force_cap = 200.0 * eps / angstrom;
 
-        LocalRepulsive(PseudoAtoms const &pseudoAtoms, NativeStructure const &ns);
+        LocalRepulsive(PseudoAtoms const &pseudoAtoms);
 
         Real energy;
 

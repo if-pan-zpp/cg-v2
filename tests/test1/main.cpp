@@ -42,7 +42,7 @@ int main() {
     HarmonicTethers ht(modelData.pseudoAtoms, modelData.ns);
     sim.attachForce(&ht);
 
-    LocalRepulsive lr(modelData.pseudoAtoms, modelData.ns);
+    LocalRepulsive lr(modelData.pseudoAtoms);
     sim.attachForce(&lr);
 
     NativeBondAngle nba(modelData.pseudoAtoms, modelData.ns);
