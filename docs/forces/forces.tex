@@ -1,0 +1,46 @@
+\documentclass{article}
+\usepackage{esvect}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage{bm}
+
+\DeclarePairedDelimiter{\brk}{(}{)}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\statediff}[1]{\frac{\partial #1}{\partial r_n^\mu}}
+\newcommand{\cross}{\times}
+
+\title{Forces}
+\author{}
+\date{}
+
+\begin{document}
+  \maketitle
+
+  \section*{Notation}
+  Let $r_i$, $v_i$, $m_i$, $q_i$ be position, velocity, mass and charge of $i$th particle, respectively. $V$ is the potential of the force field. Let $x^\mu$ denote (0-indexed) $\mu$th component of $x$. Let $\partial_n^\mu := \partial/\partial \brk*{r_n}^\mu$ -- in particular $\brk*{F_n}^\mu = -\partial_n^\mu V$. Let $\varepsilon^\mu$ be (somewhat incompatibly) unit vector for $\mu$th component.
+
+  \section*{Chirality}
+  \begin{align*}
+    V &= \frac{1}{2} e_{chi} \sum (C_i - C_i^{nat})^2\\
+    C_i &= \frac{\brk*{v_{i-1} \cross v_i} \cdot v_{i+1}}{d_0^3}
+  \end{align*}
+  where $v_i = r_{i+1} - r_i$, $d_0$ is $|v_0|$ in the native state, and $C_i^{nat}$ is $C_i$ in the native state.
+
+  \begin{align*}
+    \partial_n^\mu V &= e_{chi} \sum (C_i - C_i^{nat}) \partial_n^\mu C_i\\
+    \partial_n^\mu C_i &= \frac{1}{d_0^3} \partial_n^\mu \brk{\underbrace{\brk*{v_{i-1} \cross v_i} \cdot v_{i+1}}_{f_i}}
+  \end{align*}
+
+  This vanishes for $n \not= i-1, i, i+1, i+2$. For these values,
+  \begin{align*}
+    \partial_{i-1}^\mu f_i &= \brk*{-\varepsilon^\mu \cross v_i} \cdot v_{i+1}\\
+    &= -\brk*{v_i \cross v_{i+1}} \cdot \varepsilon^\mu\\
+    \partial_i^\mu f_i &= \brk*{\varepsilon^\mu \cross v_i - v_{i-1} \cross \varepsilon^\mu} \cdot v_{i+1}\\
+    &= \brk*{v_i \cross v_{i+1} + v_{i-1} \cross v_{i+1}} \cdot \varepsilon^\mu\\
+    \partial_{i+1}^\mu f_i &= \brk*{v_{i-1} \cross \varepsilon^\mu} \cdot v_{i+1} + \brk*{v_{i-1} \cross v_i} \cdot \brk*{-\varepsilon^\mu}\\
+    &= -\brk*{v_{i-1} \cross v_{i+1} + v_{i-1} \cross v_i} \cdot \varepsilon^\mu\\
+    \partial_{i+2}^\mu f_i &= \brk*{v_{i-1} \cross v_i} \cdot \varepsilon^\mu
+  \end{align*}
+  from the scalar triple product property; let us also recall, that $v \cdot \varepsilon^\mu = v^\mu$.
+\end{document}
