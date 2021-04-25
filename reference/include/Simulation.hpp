@@ -1,6 +1,7 @@
 #include "integrators/Integrator.hpp"
 #include "data/ModelData.hpp"
 #include "data/Topology.hpp"
+#include "data/SharedData.hpp"
 #include "forces/Force.hpp"
 #include "reporters/Reporter.hpp"
 #include "data/Results.hpp"
@@ -15,6 +16,8 @@ namespace cg::reference {
         Topology topology;
         Integrator *integrator = 0;
         Results results;
+        SharedData sharedData;
+
         const Real delta = 0.005 * toolkit::nanosecond; // dt
 
         Simulation(toolkit::Model const &, toolkit::RNG &);

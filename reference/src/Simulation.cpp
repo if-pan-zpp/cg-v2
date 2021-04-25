@@ -6,7 +6,9 @@ using namespace std;
 Simulation::Simulation(toolkit::Model const &model, toolkit::RNG &rng) :
     rng(rng),
     modelData(model),
-    topology(modelData.pseudoAtoms, modelData.ns) {
+    topology(modelData.pseudoAtoms, modelData.ns),
+    results(),
+    sharedData(modelData.pseudoAtoms.n) {
     
     // TODO: get real temperature value
     modelData.pseudoAtoms.initMovement(rng, 0.35 * epsDivkB, delta);
