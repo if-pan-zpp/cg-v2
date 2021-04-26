@@ -4,6 +4,33 @@ using namespace cg::reference;
 using namespace cg::toolkit;
 using namespace std;
 
+PseudoAtoms::AminoAcid aaCodeFromName(string const &name) {
+    using aaCode = PseudoAtoms::AminoAcid;
+    static unordered_map<string, aaCode> conversionMap {
+        {"ALA", aaCode::ALA},
+        {"ARG", aaCode::ARG},
+        {"ASN", aaCode::ASN},
+        {"ASP", aaCode::ASP},
+        {"CYS", aaCode::CYS},
+        {"GLU", aaCode::GLU},
+        {"GLN", aaCode::GLN},
+        {"GLY", aaCode::GLY},
+        {"HIS", aaCode::HIS},
+        {"ILE", aaCode::ILE},
+        {"LEU", aaCode::LEU},
+        {"LYS", aaCode::LYS},
+        {"MET", aaCode::MET},
+        {"PHE", aaCode::PHE},
+        {"PRO", aaCode::PRO},
+        {"SER", aaCode::SER},
+        {"THR", aaCode::THR},
+        {"TRP", aaCode::TRP},
+        {"TYR", aaCode::TYR},
+        {"VAL", aaCode::VAL}
+    };
+    return conversionMap.at(name);
+}
+
 ModelData::ModelData(Model const &model) {
     size_t n = 0;
     
@@ -31,9 +58,14 @@ ModelData::ModelData(Model const &model) {
     for (auto const &id_and_chain : model.chains) {
         Chain const &chain = id_and_chain.second;
         
-        for (size_t i = 0; i < chain.positions.cols(); ++i) {
+        size_t length = chain.residues.size();
+
+        assert (chain.positions.cols() == length);
+        for (size_t i = 0; i < length; ++i) {
             pseudoAtoms.pos.col(patom_id) = chain.positions.col(i);
             pseudoAtoms.chainId.push_back(id_and_chain.first);
+
+            pseudoAtoms.aminoAcidCode.push_back(aaCodeFromName(string(chain.residues[i])));
 
             patom_id++;
         }
