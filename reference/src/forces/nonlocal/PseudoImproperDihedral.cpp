@@ -10,7 +10,6 @@ PseudoImproperDihedral::PseudoImproperDihedral(PseudoAtoms const &_pseudoAtoms,
 
 void PseudoImproperDihedral::compute(Reals3 &forces) {
     size_t residues = pseudoAtoms.n;
-    Reals3 forces_diff = Reals3::Zero(3, residues);
     Reals3 const &positions = pseudoAtoms.pos;
     std::vector<std::string> const &type = pseudoAtoms.type;
     Pairs const &list = verlet_list.pairs;
@@ -66,7 +65,7 @@ void PseudoImproperDihedral::compute(Reals3 &forces) {
             Real psi = acos(cospsi);
             if(v1.dot(v5) < 0)  psi *= -1.;
 
-            alpha1[nr] = alpha_bb_pos * (psi - psi0_bb_pos);
+            alpha1[nr] = alpha_ss * (psi - psi0_ss);
             if(alpha1[nr] < M_PI && alpha1[nr] > -M_PI) {
                 if(pid_cos) {
                     ss_lambda[nr] = 0.5 * (cos(alpha1[nr]) + 1);
@@ -143,7 +142,7 @@ void PseudoImproperDihedral::compute(Reals3 &forces) {
             } else {
                 Real rsi = r_min  / dist;
                 Real r6 = pow(rsi, 6.);
-                lj_energy = 4. * r6 * (1. - r6) * eps_bb;
+                lj_energy = 4. * r6 * (r6 - 1.) * eps_bb;
                 force += 24. * r6 * (1. - 2. * r6) / dist * bb_lambda_ * eps_bb;
             }
             //TODO update global potential energy
@@ -158,7 +157,7 @@ void PseudoImproperDihedral::compute(Reals3 &forces) {
                         Real dgdx2 = (dgdx + 1.) * (dgdx + 1.);
                         dvdp[nr] += alpha3[nr] * dgdx / dgdx2 * bb_lambda[other_nr] * lj_energy;
                     } else {
-                        Real dgdx = 2. * alpha2[nr] * (alpha2[nr] + 1.);
+                        Real dgdx = - 2. * alpha2[nr] * (alpha2[nr] + 1.);
                         Real dgdx2 = (dgdx - 1.) * (dgdx - 1.);
                         dvdp[nr] += alpha3[nr] * dgdx / dgdx2 * bb_lambda[other_nr] * lj_energy;
                     }
@@ -178,15 +177,15 @@ void PseudoImproperDihedral::compute(Reals3 &forces) {
             bool i_charged;
             bool j_charged;
             if(pid_electrostatics && i_charged && j_charged){
-                Real expc = exp(-1. / elektr_screen);
+                Real expc = exp(- dist / elektr_screen);
                 Real coulpotcoeff = expc * coul;
-                if(i_type == j_type)    coulpotcoeff *= -1.;
+                if(i_type != j_type)    coulpotcoeff *= -1.;
                 if(ele_perm_const) {
                     lj_energy = coulpotcoeff / dist;
-                    force += lj_energy * (-1. / elektr_screen - 1.) / dist;
+                    force += lj_energy * (- dist / elektr_screen - 1.) / dist;
                 } else {
                     lj_energy = coulpotcoeff / sq_dist;
-                    force += lj_energy * (-1. / elektr_screen - 2.) / dist;
+                    force += lj_energy * (- dist / elektr_screen - 2.) / dist;
                 }
             }
             else if(sink_pot && dist < r_min * pow(2., 1. / 6.)) {
@@ -201,7 +200,7 @@ void PseudoImproperDihedral::compute(Reals3 &forces) {
             } else {
                 Real rsi = r_min  / dist;
                 Real r6 = pow(rsi, 6.);
-                lj_energy = 4. * r6 * (1. - r6) * eps_mj;
+                lj_energy = 4. * r6 * (r6 - 1.) * eps_mj;
                 force += 24. * r6 * (1. - 2. * r6) / dist * ss_lambda_ * eps_mj;
             }
             //TODO update global potential energy
@@ -216,7 +215,7 @@ void PseudoImproperDihedral::compute(Reals3 &forces) {
                         Real dgdx2 = (dgdx + 1.) * (dgdx + 1.);
                         dvdp[nr] += alpha_ss * dgdx / dgdx2 * ss_lambda[other_nr] * lj_energy;
                     } else {
-                        Real dgdx = 2. * alpha1[nr] * (alpha1[nr] + 1.);
+                        Real dgdx = - 2. * alpha1[nr] * (alpha1[nr] + 1.);
                         Real dgdx2 = (dgdx - 1.) * (dgdx - 1.);
                         dvdp[nr] += alpha_ss * dgdx / dgdx2 * ss_lambda[other_nr] * lj_energy;
                     }
@@ -227,19 +226,18 @@ void PseudoImproperDihedral::compute(Reals3 &forces) {
         force /= -dist;
         Real3 rep = force * diff_vec;
 
-        forces_diff.col(i) += rep;
-        forces_diff.col(j) -= rep;
+        forces.col(i) += rep;
+        forces.col(j) -= rep;
 
         for(size_t nr = 0; nr <=1; nr++) {
             int i1 = i;
             int i2 = j;
             if(nr == 1) std::swap(i1,i2);
-            forces_diff.col(i1) -= dvdp[nr] * f_var[nr][0];
-            forces_diff.col(i1+1) -= dvdp[nr] * f_var[nr][1];
-            forces_diff.col(i1-1) -= dvdp[nr] * f_var[nr][2];
-            forces_diff.col(i2) -= dvdp[nr] * f_var[nr][3];
+            forces.col(i1) -= dvdp[nr] * f_var[nr][0];
+            forces.col(i1+1) -= dvdp[nr] * f_var[nr][1];
+            forces.col(i1-1) -= dvdp[nr] * f_var[nr][2];
+            forces.col(i2) -= dvdp[nr] * f_var[nr][3];
         }
     }
-    forces += forces_diff;
     // TODO update energy
 }
