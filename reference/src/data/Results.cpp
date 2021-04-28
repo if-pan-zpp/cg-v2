@@ -8,4 +8,5 @@ Results::Results() {
 void Results::clear() {
     potEnergy = 0.0;
     activeContacts = 0;
+    qaContacts = NULL;
 }

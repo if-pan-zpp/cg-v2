@@ -1,6 +1,7 @@
 #pragma once
 #include "forces/Force.hpp"
 #include "data/NativeStructure.hpp"
+#include "data/Results.hpp"
 #include "data/Topology.hpp"
 #include "utils/Units.hpp"
 using std::vector;

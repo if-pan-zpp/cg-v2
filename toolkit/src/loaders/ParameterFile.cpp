@@ -51,7 +51,7 @@ ParameterFile::ParameterFile(std::istream &file, bool loadMjMatrix) {
     getline(file, line); /* Rest of last line */
     getline(file, line); /* Header */
     for (Index i = 0; i < pairs_order.size(); ++i) {
-        vector<Real> params(7);
+        vector<Real> params(6);
         for (Index j = 0; j < params.size(); ++j) {
             file >> params[j];
         }

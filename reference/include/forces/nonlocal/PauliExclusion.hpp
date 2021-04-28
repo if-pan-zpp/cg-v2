@@ -1,6 +1,7 @@
 #pragma once
 #include "forces/Force.hpp"
 #include "data/Topology.hpp"
+#include "data/Results.hpp"
 #include "utils/Units.hpp"
 
 namespace cg::reference {

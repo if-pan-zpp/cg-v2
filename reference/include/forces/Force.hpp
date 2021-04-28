@@ -1,8 +1,8 @@
 #pragma once
 #include "data/Primitives.hpp"
-#include "data/Results.hpp"
 
 namespace cg::reference {
+    class Results;
     class Force {
     public:
         /* Compute energy and force, add to buffers. */

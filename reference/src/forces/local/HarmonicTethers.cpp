@@ -1,7 +1,5 @@
 #include "forces/local/HarmonicTethers.hpp"
-#include <iostream>
 using namespace cg::reference;
-using namespace std;
 
 HarmonicTethers::HarmonicTethers(PseudoAtoms const &_pseudoAtoms,
                                  NativeStructure const &_ns):

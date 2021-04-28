@@ -1,6 +1,7 @@
 #pragma once
 #include "forces/Force.hpp"
 #include "data/PseudoAtoms.hpp"
+#include "data/Results.hpp"
 #include "data/NativeStructure.hpp"
 #include "utils/Units.hpp"
 using namespace std;

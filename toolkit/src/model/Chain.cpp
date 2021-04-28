@@ -32,11 +32,12 @@ void Chain::intoSAW(bool dense, bool use_pbc, Real initial_density, Real cutoff,
 
 
     // TODO: we should only do this in the structured case
-    bond_length = 0.0;
-    for (size_t i = 0; i + 1 < n; ++i) {
-        bond_length += (positions.col(i + 1) - positions.col(i)).norm();
-    }
-    bond_length /= n - 1;
+    // bond_length = 0.0;
+    // for (size_t i = 0; i + 1 < n; ++i) {
+    //     bond_length += (positions.col(i + 1) - positions.col(i)).norm();
+    // }
+    // bond_length /= n - 1;
+    positions = Real3List::Zero(3, n); 
 
     Reals3_3 T;
     T.resize(n, Real3_3::Zero());
