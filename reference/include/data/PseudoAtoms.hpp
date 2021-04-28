@@ -4,6 +4,8 @@
 #include <unordered_map>
 
 namespace cg::reference {   
+    enum AACode : uint8_t;
+
     class PseudoAtoms {
     public:
         size_t n = 0; // number of pseudoatoms
@@ -12,12 +14,7 @@ namespace cg::reference {
         Reals mass, mass_inv, charge;
         Integers chainId;
 
-        enum AminoAcid {
-            ALA, ARG, ASN, ASP, CYS, GLU, GLN, GLY, HIS, ILE,
-            LEU, LYS, MET, PHE, PRO, SER, THR, TRP, TYR, VAL,
-            NONE
-        };
-        std::vector<AminoAcid> aminoAcidCode;
+        std::vector<AACode> aminoAcidCode;
 
         std::vector<std::string> type;
         std::unordered_map<std::string, std::pair<int, int>> typeRanges;
@@ -27,4 +24,12 @@ namespace cg::reference {
         // corresponds to temperature (given in eps/kB units).
         void initMovement(toolkit::RNG &rng, Real temperature, Real delta);
     };
+
+    enum AACode : uint8_t {
+        ALA, ARG, ASN, ASP, CYS, GLU, GLN, GLY, HIS, ILE,
+        LEU, LYS, MET, PHE, PRO, SER, THR, TRP, TYR, VAL,
+        NONE
+    };
+    const int NUM_AMINO_ACIDS = AACode::NONE;
+    AACode aaCodeFromName(string const &name);
 }

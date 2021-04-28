@@ -53,3 +53,29 @@ void PseudoAtoms::initMovement(RNG &rng, Real temperature, Real delta) {
         vel.col(i) *= sqrt(ratio);
     }
 }
+
+AACode cg::reference::aaCodeFromName(string const &name) {
+    static unordered_map<string, AACode> conversionMap {
+        {"ALA", AACode::ALA},
+        {"ARG", AACode::ARG},
+        {"ASN", AACode::ASN},
+        {"ASP", AACode::ASP},
+        {"CYS", AACode::CYS},
+        {"GLU", AACode::GLU},
+        {"GLN", AACode::GLN},
+        {"GLY", AACode::GLY},
+        {"HIS", AACode::HIS},
+        {"ILE", AACode::ILE},
+        {"LEU", AACode::LEU},
+        {"LYS", AACode::LYS},
+        {"MET", AACode::MET},
+        {"PHE", AACode::PHE},
+        {"PRO", AACode::PRO},
+        {"SER", AACode::SER},
+        {"THR", AACode::THR},
+        {"TRP", AACode::TRP},
+        {"TYR", AACode::TYR},
+        {"VAL", AACode::VAL}
+    };
+    return conversionMap.at(name);
+}
