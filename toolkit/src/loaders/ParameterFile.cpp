@@ -1,6 +1,7 @@
 #include "loaders/ParameterFile.hpp"
 #include <sstream>
 #include <fstream>
+#include "utils/Units.hpp"
 
 using namespace cg::toolkit;
 using namespace std;
@@ -113,6 +114,7 @@ ParameterFile::ParameterFile(std::istream &file, bool loadMjMatrix) {
         string res1, res2;
         Real dist;
         file >> res1 >> res2 >> dist;
+        dist *= angstrom;
 
         auto code1 = (char)AminoAcid(res1);
         auto code2 = (char)AminoAcid(res2);

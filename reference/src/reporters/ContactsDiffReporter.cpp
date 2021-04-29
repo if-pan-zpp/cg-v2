@@ -73,15 +73,16 @@ void ContactsDiffReporter::report(int step) {
         assert (results.qaContacts);
 
         map<pair<int, int>, CType> contacts;
+        set<pair<int, int>> refContacts;
+
         for (QuasiAdiabatic::Contact const &cnt : *results.qaContacts) {
             contacts[{cnt.i, cnt.j}] = cnt.type;
         }
 
         cout << "Step #" << setw(8) << step << endl;
 
-        unsigned correct = 0;
-        unsigned total = 0;
         for (QuasiAdiabatic::Contact const &refCnt : it -> second) {
+            refContacts.insert({refCnt.i, refCnt.j});
             CType type = CType::NONE;
 
             auto jt = contacts.find({refCnt.i, refCnt.j});
@@ -92,11 +93,15 @@ void ContactsDiffReporter::report(int step) {
                      << ", type = " << cTypeToName(type)
                      << ", refType = " << cTypeToName(refCnt.type) << endl;
             }
-            else correct++;
-            total++;
         }
-        
-        cout << correct << "/" << total << " correct contacts" << endl;
+
+        for (QuasiAdiabatic::Contact const &cnt : *results.qaContacts) {
+            auto jt = refContacts.find({cnt.i, cnt.j});
+            if (jt == refContacts.end()) {
+                cout << "Contact shouldn't exist: " << "i = " << cnt.i << ", j = " << cnt.j
+                     << ", type = " << cTypeToName(cnt.type) << endl;
+            }
+        }
     }
     else {
         cerr << "No information about contacts in step " << step << endl;

@@ -6,6 +6,7 @@
 #include "data/SharedData.hpp"
 #include "data/Parameters.hpp"
 #include "utils/Units.hpp"
+#include <set>
 using std::vector;
 using cg::toolkit::angstrom;
 
@@ -48,7 +49,7 @@ namespace cg::reference {
             unsigned adiabCoeff;
         };
 
-        const Real cutoffCoeff = 1.0 * pow(2., 1./6.);
+        const Real cutoffCoeff = 1.0; // TODO: tolerance goes here
 
         const Real lj_r_min[NUM_CONTACT_TYPES] = {
             [BB] = 5.0 * angstrom,
@@ -82,6 +83,7 @@ namespace cg::reference {
         Real3 nVector(int i) const;
 
         vector<Contact> activeContacts;
+        set<pair<int, int>> takenPairs;
 
         Real energy;
 
