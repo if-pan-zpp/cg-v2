@@ -1,5 +1,6 @@
 #include "data/ModelData.hpp"
 #include "utils/Units.hpp"
+#include "utils/Angles.hpp"
 using namespace cg::reference;
 using namespace cg::toolkit;
 using namespace std;
@@ -22,10 +23,19 @@ ModelData::ModelData(Model const &model) {
     pseudoAtoms.type = vector<string>(n, "NORMAL");
     pseudoAtoms.typeRanges["NORMAL"] = {0, n};
 
-    // < -10 means undefined
-    ns.tether = -11 * Reals::Ones(n);
-    ns.bond = -11 * Reals::Ones(n);
-    ns.dihedral = -11 * Reals::Ones(n);
+    // Using NaNs can slow down vectorized computations,
+    // so we use them only in debug mode
+    
+    #ifdef NDEBUG
+    const Real undefinedVal = 0.;
+    #else
+    static_assert(numeric_limits<Real>::has_quiet_NaN);
+    const Real undefinedVal = numeric_limits<Real>::quiet_NaN();
+    #endif
+   
+    ns.tether = Reals::Constant(n, undefinedVal);
+    ns.bond = Reals::Constant(n, undefinedVal);
+    ns.dihedral = Reals::Constant(n, undefinedVal);
 
     size_t patom_id = 0;
     for (auto const &id_and_chain : model.chains) {
@@ -43,6 +53,19 @@ ModelData::ModelData(Model const &model) {
             patom_id++;
         }
 
+        Reals3 const &pos = pseudoAtoms.pos;
+        for (size_t i = 0; i < length; ++i) {
+            if (i + 1 < length) {
+                ns.tether(i) = (pos.col(i + 1) - pos.col(i)).norm();
+            }
+            if (1 <= i && i + 1 < length) {
+                ns.bond(i) = toolkit::bond(pos.col(i - 1), pos.col(i), pos.col(i + 1));
+            }
+            if (2 <= i && i + 1 < length) {
+                ns.dihedral(i) = toolkit::dihedral(pos.col(i - 2), pos.col(i - 1),
+                                                   pos.col(i), pos.col(i + 1));
+            }
+        }
 
         for (toolkit::NativeStructure const &tns : chain.structuredParts) {
             for (size_t i = 0; i < tns.tether.cols(); ++i) {
@@ -59,7 +82,8 @@ ModelData::ModelData(Model const &model) {
 
             for (toolkit::NativeStructure::Contact const &contact : tns.contacts) {
                 ns.contacts.push_back(NativeStructure::Contact {
-                        .residues = contact.residues,
+                        .residues = {contact.residues.first + tns.offset,
+                                     contact.residues.second + tns.offset},
                         .distance = contact.distance
                 });
             }

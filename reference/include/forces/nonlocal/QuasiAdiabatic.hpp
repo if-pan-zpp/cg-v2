@@ -7,6 +7,7 @@
 #include "data/Parameters.hpp"
 #include "utils/Units.hpp"
 using std::vector;
+using cg::toolkit::angstrom;
 
 namespace cg::reference {
     class Results;
@@ -28,20 +29,34 @@ namespace cg::reference {
         Real sidechain_max = 0.5;
 
         enum ContactType {
-            NONE,
             BB,
             BS,
             SB,
-            SS
+            SS,
+            NONE
         };
-        bool disable(ContactType type, int i, int j);
-        ContactType getContactType(int i, int j);
+        static const size_t NUM_CONTACT_TYPES = ContactType::NONE;
+
+        bool isDisabled(ContactType type, int i, int j) const;
+        ContactType getContactType(int i, int j) const;
+
+        Real getCutoff(AACode i, AACode j, ContactType type) const;
 
         struct Contact {
             unsigned i, j;
             ContactType type;
             unsigned adiabCoeff;
         };
+
+        const Real cutoffCoeff = 1.0 * pow(2., 1./6.);
+
+        const Real lj_r_min[NUM_CONTACT_TYPES] = {
+            [BB] = 5.0 * angstrom,
+            [BS] = 6.6 * angstrom,
+            [SB] = 6.6 * angstrom,
+            [SS] = 7.5 * angstrom
+        };
+        Real ss_lj_r_min[NUM_AMINO_ACIDS][NUM_AMINO_ACIDS];
 
     private:
         PseudoAtoms const &pseudoAtoms;
@@ -60,13 +75,16 @@ namespace cg::reference {
         };
         AAType aaTypes[NUM_AMINO_ACIDS];
 
-        uint8_t getSSBound(CoordNumber const &crdNum, AACode aaCode);
+        uint8_t getSSBound(CoordNumber const &crdNum, AACode aaCode) const;
+        Real getMaxCutoff(AACode i, AACode j) const;
 
-        Real3 hVector(int i);
-        Real3 nVector(int i);
+        Real3 hVector(int i) const;
+        Real3 nVector(int i) const;
 
         vector<Contact> activeContacts;
 
         Real energy;
+
+        Real totalCutoff, totalCutoffSquared;
     };
 }

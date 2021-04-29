@@ -30,9 +30,12 @@ void NativeContacts::compute(Reals3 &forces) {
         Real sq_dist = diff_vec.squaredNorm();
         if (sq_dist > sq_cutoff) continue;
 
-        activeContacts++;
-
         Real dist = sqrt(sq_dist);
+
+        // TODO: pass cntfct here
+        if (dist < 1.5 * contact.sigma) {
+            activeContacts++;
+        }
         Real sigma_by_dist_6 = pow(contact.sigma / dist, 6.); //TODO: check assembly
 
         energy += 4. * depth * sigma_by_dist_6 * (sigma_by_dist_6 - 1.);

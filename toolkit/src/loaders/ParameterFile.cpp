@@ -108,7 +108,7 @@ ParameterFile::ParameterFile(std::istream &file, bool loadMjMatrix) {
         parameters.mjMatrix = Parameters::PairMatrix();
     }
 
-    auto numAminoAcidPairs = AminoAcid::numAminoAcids * (AminoAcid::numAminoAcids + 1);
+    auto numAminoAcidPairs = AminoAcid::numAminoAcids * (AminoAcid::numAminoAcids + 1) / 2;
     for (Index i = 0; i < numAminoAcidPairs; ++i) {
         string res1, res2;
         Real dist;

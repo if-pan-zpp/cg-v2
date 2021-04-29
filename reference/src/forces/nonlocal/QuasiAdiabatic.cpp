@@ -39,9 +39,22 @@ QuasiAdiabatic::QuasiAdiabatic(PseudoAtoms const &pseudoAtoms,
         }
     }
 
+    for (auto const &[aminoAcidPair, r_min] : parameters.ssMinimalDistances) {
+        AACode ai = aaCodeFromName(string(aminoAcidPair.first));
+        AACode aj = aaCodeFromName(string(aminoAcidPair.second));
+        ss_lj_r_min[ai][aj] = r_min;
+    }
+
+    totalCutoff = *max_element(lj_r_min, lj_r_min + NUM_CONTACT_TYPES);
+    for (size_t ai = 0; ai < NUM_AMINO_ACIDS; ++ai) {
+        for (size_t aj = 0; aj < NUM_AMINO_ACIDS; ++aj) {
+            totalCutoff = max(totalCutoff, ss_lj_r_min[ai][aj]);
+        }
+    }
+    totalCutoffSquared = totalCutoff * totalCutoff;
 }
 
-uint8_t QuasiAdiabatic::getSSBound(CoordNumber const &crdNum, AACode aaCode) {
+uint8_t QuasiAdiabatic::getSSBound(CoordNumber const &crdNum, AACode aaCode) const {
     switch (aaTypes[aaCode]) {
 
     case GLY_OR_PRO:
@@ -61,7 +74,7 @@ uint8_t QuasiAdiabatic::getSSBound(CoordNumber const &crdNum, AACode aaCode) {
     };
 }
 
-Real3 QuasiAdiabatic::hVector(int i) {
+Real3 QuasiAdiabatic::hVector(int i) const {
     assert (i > 0 && i + 1 < pseudoAtoms.n);
     Integers const &chainId = pseudoAtoms.chainId;
     assert (chainId[i - 1] == chainId[i + 1]);
@@ -72,7 +85,7 @@ Real3 QuasiAdiabatic::hVector(int i) {
     return va.cross(vb).normalized();
 }
 
-Real3 QuasiAdiabatic::nVector(int i) {
+Real3 QuasiAdiabatic::nVector(int i) const {
     assert (i > 0 && i + 1 < pseudoAtoms.n);
     Integers const &chainId = pseudoAtoms.chainId;
     assert (chainId[i - 1] == chainId[i + 1]);
@@ -83,7 +96,7 @@ Real3 QuasiAdiabatic::nVector(int i) {
     return (v0 - v1).normalized();
 }
 
-bool QuasiAdiabatic::disable(ContactType type, int i, int j) {
+bool QuasiAdiabatic::isDisabled(ContactType type, int i, int j) const {
     CoordNumber const &crd_i = sharedData.coordNumbers[i];
     CoordNumber const &crd_j = sharedData.coordNumbers[j];
     
@@ -129,14 +142,14 @@ bool QuasiAdiabatic::disable(ContactType type, int i, int j) {
 	}
 }
 
-QuasiAdiabatic::ContactType QuasiAdiabatic::getContactType(int i, int j) {
+QuasiAdiabatic::ContactType QuasiAdiabatic::getContactType(int i, int j) const {
     Real3 const r_ij = (pseudoAtoms.pos.col(j) - pseudoAtoms.pos.col(i)).normalized();
     
     Real3 const h_i = hVector(i);
     Real3 const h_j = hVector(j);
 
     // Check for BB contact
-    if (not disable(BB, i, j)                and
+    if (not isDisabled(BB, i, j)                and
         abs(h_i.dot(r_ij)) > backbone_2_min  and 
         abs(h_j.dot(r_ij)) > backbone_2_min  and
         abs(h_i.dot(h_j))  > backbone_1_min) {
@@ -145,7 +158,7 @@ QuasiAdiabatic::ContactType QuasiAdiabatic::getContactType(int i, int j) {
 
     // Check for SB contact
     Real3 const n_i = nVector(i);
-    if (not disable(SB, i, j)                and
+    if (not isDisabled(SB, i, j)                and
         n_i.dot(-r_ij) < sidechain_max       and
         abs(h_j.dot(r_ij)) > backbone_2_min) {
         return SB;
@@ -153,14 +166,14 @@ QuasiAdiabatic::ContactType QuasiAdiabatic::getContactType(int i, int j) {
 
 	// Check for BS contact
     Real3 const n_j = nVector(j);
-	if (not disable(BS, i, j)                and
+	if (not isDisabled(BS, i, j)                and
 		n_j.dot(r_ij) < sidechain_max        and
 		abs(h_i.dot(r_ij)) > backbone_2_min) {
 		return BS;
 	}
 		
 	// Check for SS contact
-	if (not disable(SS, i, j)           and
+	if (not isDisabled(SS, i, j)           and
 		n_i.dot(-r_ij) < sidechain_max  and
 		n_j.dot(r_ij)  < sidechain_max) {
 		return SS;
@@ -169,8 +182,48 @@ QuasiAdiabatic::ContactType QuasiAdiabatic::getContactType(int i, int j) {
     return NONE;
 }
 
+Real QuasiAdiabatic::getCutoff(AACode i, AACode j, ContactType type) const {
+    switch (type) {
+    case SS:
+        return ss_lj_r_min[i][j];
+    case NONE:
+        assert(false);
+    default:
+        return lj_r_min[type];
+    };
+}
+
+Real QuasiAdiabatic::getMaxCutoff(AACode i, AACode j) const {
+    static const Real max_r_min = max(lj_r_min[BB],
+                                  max(lj_r_min[BS],
+                                      lj_r_min[SB]));
+    return max(max_r_min, ss_lj_r_min[i][j]);
+}
+
 void QuasiAdiabatic::compute(Reals3 &forces) {
+    Reals3 const &pos = pseudoAtoms.pos;
+    vector<AACode> const &aaCodes = pseudoAtoms.aminoAcidCode;
     
+    for (auto const &[i, j] : verletList.pairs) {
+        Real3 diff_vec = top.offset(pos.col(i), pos.col(j));
+        Real sq_dist = diff_vec.squaredNorm();
+
+        if (sq_dist >= totalCutoffSquared) continue;
+
+        if (sq_dist < getMaxCutoff(aaCodes[i], aaCodes[j])) {
+            Real dist = sqrt(sq_dist);
+
+            ContactType type = getContactType(i, j);
+            if (type != NONE) {
+                activeContacts.push_back(Contact {
+                        .i = (unsigned) i,
+                        .j = (unsigned) j,
+                        .type = type,
+                        .adiabCoeff = 0
+                    });
+            }
+        }
+    }
 }
 
 void QuasiAdiabatic::dumpResults(Results &results) {

@@ -25,6 +25,8 @@ ContactMapFile::ContactMapFile(istream &file) {
         auto &dist = ns.contacts[i].distance;
         file >> dist;
         dist *= 5.0 * angstrom;
+        // TODO: figure out exactly where we need sigmas and where r_min
+        dist *= pow(2.0, 1./6.);
     }
 
     for (Index i = 0; i < nresidues; ++i) {
