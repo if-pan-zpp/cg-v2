@@ -59,6 +59,14 @@ namespace cg::reference {
          * topology. */
         Real3 offset(Real3 const &p, Real3 const &q) const;
 
+        /* return boundaries of simulation box (lowest point, highest point)
+           zdown, xup etc. from cg.f */
+        pair<Real3, Real3> getBoundaries() const; //TODO
+
+        /* get shear value
+        */
+        Real getShear() const; // TODO
+
         /* Check whether neighborhoods are still correct. If not, recompute
          * them. */
         void update();

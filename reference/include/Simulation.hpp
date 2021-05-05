@@ -27,6 +27,10 @@ namespace cg::reference {
 
         void run(int max_steps);
 
+        /* answer true if pseudoatoms may now be connected to wall
+           corresponds to (kbwal(kconnecttime) > 0) in cg.f */
+        bool allowWallConnect() const; //TODO
+
     private:
         Reals3 forces;
         vector<Force*> forceObjects;
