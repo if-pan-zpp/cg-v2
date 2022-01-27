@@ -36,11 +36,12 @@ namespace cg::toolkit {
     Unit eV = 1.602176634e-19 * Joule;
 
     /* Temperature */
-    Unit epsDivkB = 1.0;
-    Unit kB = eps;
+    Unit kB = 1.0;
+    Unit epsDivkB = eps / kB;
     Unit Kelvin = 1.380649e-23 * Joule / kB;
 
     /* Mass */
+    Unit f77mass = eps * tau * tau / (f77unit * f77unit);
     Unit dalton = 1.0;
     Unit kilogram = dalton * mol / 0.99999999965e-3;
 

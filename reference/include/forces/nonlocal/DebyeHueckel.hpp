@@ -20,7 +20,7 @@ namespace cg::reference {
         // Need to figure out the `coul` variable from CPC14.pdf
 
         /* Not sure what's the cutoff. */
-        DebyeHueckel(PseudoAtoms const& pseudoAtoms, Topology const& top,
+        DebyeHueckel(PseudoAtoms const &pseudoAtoms, Topology const &top,
             Real cutoff = 0.0*angstrom);
 
         void compute(Real &energy, Reals3 &forces) override;

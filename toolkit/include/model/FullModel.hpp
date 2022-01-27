@@ -3,6 +3,8 @@
 #include "model/Model.hpp"
 #include "data/Parameters.hpp"
 #include <unordered_map>
+#include <unordered_set>
+using namespace std;
 
 namespace cg::toolkit {
     /* A "full" model. The necessity for this class comes from the fact that
@@ -15,36 +17,39 @@ namespace cg::toolkit {
 
         /* Residues (with atoms) and chains. */
         struct Residue {
-            std::unordered_map<std::string, Real3> atoms;
+            unordered_map<string, Real3> atoms;
             AminoAcid type;
         };
-        using Chain = std::vector<Residue>;
-        std::unordered_map<Index, Chain> chains;
+        using Chain = vector<Residue>;
+        unordered_map<Index, Chain> chains;
 
         /* Contacts (normal, SS bonds etc.). */
-        using ResidueID = std::pair<Index, Index>;
+        using ResidueID = pair<Index, Index>;
         struct Contact {
             ResidueID res1, res2;
             Real distance;
-            std::string type;
+            string type;
         };
-        std::vector<Contact> contacts;
+        vector<Contact> contacts;
+        using IndexPair = pair<Index, Index>;
+        unordered_map<Index, unordered_set<IndexPair>> intraChainContacts;
 
         /* Operators for a disjoint union of full models. */
-        FullModel& operator+=(FullModel const& fullModel2);
-        FullModel operator+(FullModel const& fullModel2) const;
+        FullModel &operator+=(FullModel const &fullModel2);
+        FullModel operator+(FullModel const &fullModel2) const;
 
         /* Apply an affine transform. */
-        void apply(RealAffine3 const& aff);
+        void apply(RealAffine3 const &aff);
 
         /* Reduce into a Model. */
-        Model reduce() const;
+        Model reduce();
 
         /* Derive a contact map from full atomic data. */
-        void deriveContactsFromAllAtoms(Parameters const& parameters);
+        void deriveContactsFromAllAtoms(Parameters const &parameters);
 
     private:
         /* Reduce into a CG::Chain. */
-        cg::toolkit::Chain reduceChain(Chain const& chain) const;
+        cg::toolkit::Chain reduceChain(Chain const &chain,
+                                       unordered_set<IndexPair> const &intraContacts) const;
     };
 }

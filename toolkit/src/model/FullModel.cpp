@@ -8,7 +8,7 @@ FullModel &FullModel::operator+=(const FullModel &fullModel2) {
     auto offset = chains.size();
 
     /* Load chains. */
-    for (auto const& [chainId, chain]: fullModel2.chains) {
+    for (auto const &[chainId, chain]: fullModel2.chains) {
         chains[offset + chainId] = chain;
     }
 
@@ -29,25 +29,25 @@ FullModel FullModel::operator+(const FullModel &fullModel2) const {
 }
 
 void FullModel::apply(const RealAffine3 &aff) {
-    for (auto& [chainId, chain]: chains) {
-        for (auto& residue: chain) {
-            for (auto& [name, pos]: residue.atoms) {
+    for (auto &[chainId, chain]: chains) {
+        for (auto &residue: chain) {
+            for (auto &[name, pos]: residue.atoms) {
                 pos = aff * pos;
             }
         }
     }
 }
 
-Model FullModel::reduce() const {
+Model FullModel::reduce() {
     Model redux;
 
     /* Reduce the chains. */
-    for (auto const& [chainId, chain]: chains) {
-        redux.chains[chainId] = reduceChain(chain);
+    for (auto const &[chainId, chain]: chains) {
+        redux.chains[chainId] = reduceChain(chain, intraChainContacts[chainId]);
     }
 
     /* Contacts stay essentially the same. */
-    for (auto const& contact: contacts) {
+    for (auto const &contact: contacts) {
         redux.contacts.push_back((Model::Contact) {
             .res1 = contact.res1,
             .res2 = contact.res2,
@@ -59,9 +59,14 @@ Model FullModel::reduce() const {
     return redux;
 }
 
-cg::toolkit::Chain FullModel::reduceChain(const FullModel::Chain &chain) const {
+cg::toolkit::Chain FullModel::reduceChain(
+    FullModel::Chain const &chain,
+    unordered_set<IndexPair> const &intraContacts) const {
+
     cg::toolkit::Chain reduxChain;
     NativeStructure ns;
+
+    ns.offset = 0;
 
     Real3List CA;
     resizeVectorList(CA, chain.size());
@@ -90,6 +95,14 @@ cg::toolkit::Chain FullModel::reduceChain(const FullModel::Chain &chain) const {
         ns.dihedral(i) = dihedral(CA.col(i-2), CA.col(i-1), CA.col(i), CA.col(i+1));
     }
 
+    /* Store intra chain contacts. */
+    for (auto const &[i, j] : intraContacts) {
+        ns.contacts.emplace_back(NativeStructure::Contact {
+                .residues = make_pair(i, j),
+                .distance = (CA.col(j) - CA.col(i)).norm()
+        });
+    }
+
     reduxChain.positions = move(CA);
     reduxChain.structuredParts.push_back(ns);
     return reduxChain;
@@ -103,26 +116,26 @@ void FullModel::deriveContactsFromAllAtoms(const Parameters &parameters) {
      * (yet, anyways). */
 
     /* Over chains. */
-    for (auto const& [i1, chain1]: chains) {
-        for (auto const& [i2, chain2]: chains) {
+    for (auto const &[i1, chain1]: chains) {
+        for (auto const &[i2, chain2]: chains) {
             if (i2 > i1) continue;
 
             /* Over residues. */
             for (Index j1 = 0; j1 < chain1.size(); ++j1) {
-                auto& res1 = chain1[j1];
+                auto &res1 = chain1[j1];
 
                 Index j2 = (i1 == i2 ? j1 + 3 : 0);
                 for (; j2 < chain2.size(); ++j2) {
-                    auto& res2 = chain2[j2];
+                    auto &res2 = chain2[j2];
 
                     /* Over atoms. */
-                    for (auto const& [name1, pos1]: res1.atoms) {
+                    for (auto const &[name1, pos1]: res1.atoms) {
                         if (parameters.atomRadii.count({res1.type, name1}) == 0)
                             continue;
                         auto radius1 = parameters.atomRadii.at({res1.type, name1});
                         char type1 = backbone.find(name1) == backbone.end() ? 'b' : 's';
 
-                        for (auto const& [name2, pos2]: res2.atoms) {
+                        for (auto const &[name2, pos2]: res2.atoms) {
                             if (parameters.atomRadii.count({res2.type, name2}) == 0)
                                 continue;
                             auto radius2 = parameters.atomRadii.at({res2.type, name2});
@@ -130,13 +143,17 @@ void FullModel::deriveContactsFromAllAtoms(const Parameters &parameters) {
 
                             /* Check if in contact. */
                             auto dist = (pos2 - pos1).norm();
-                            if (radius1 + radius2 > dist*alpha) {
+                            if (dist < alpha * (radius1 + radius2)) {
                                 contacts.push_back((Contact) {
                                     .res1 = {i1, j1},
                                     .res2 = {i2, j2},
                                     .distance = dist,
                                     .type = string(1, type1) + string(1, type2),
                                 });
+
+                                if (i1 == i2) {
+                                    intraChainContacts[i1].insert({j1, j2});
+                                }
                             }
                         }
                     }

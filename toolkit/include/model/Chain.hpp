@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include "utils/Units.hpp"
+#include "utils/RNG.hpp"
 
 namespace cg::toolkit {
     /* This class represents a single chain in <Model>. In particular,
@@ -22,9 +24,18 @@ namespace cg::toolkit {
 
         /* Morph the chain into a self-avoiding walk.
          * TODO: figure out the randomness in the program. */
-        void intoSAW();
+        void intoSAW(bool dense, bool use_pbc, Real initial_density, Real cutoff, RNG &rng);
 
         /* Apply an affine transform to the chain. */
-        void apply(RealAffine3 const& aff);
+        void apply(RealAffine3 const &aff);
+
+    private:
+        Real bond_length = 3.8 * angstrom;
+        int SAW_attempts_left = 9000;
+        
+         // for PBC, wouldn't be needed if this class had reference to Topology
+        Real3 cell, cell_inv;
+
     };
+    
 }

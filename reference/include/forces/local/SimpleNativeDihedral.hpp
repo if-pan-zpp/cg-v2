@@ -17,8 +17,8 @@ namespace cg::reference {
     public:
         Real k = 3.33*eps/(radian*radian);
 
-        SimpleNativeDihedral(PseudoAtoms const& pseudoAtoms, NativeStructure const& ns);
+        SimpleNativeDihedral(PseudoAtoms const &pseudoAtoms, NativeStructure const &ns);
 
-        void compute(Real &energy, Reals3 &forces) override;
+        void compute(Reals3 &forces) override;
     };
 }

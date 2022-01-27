@@ -9,12 +9,12 @@ Model::Model(const Chain &chain) {
 Model &Model::operator+=(const Model &model2) {
     /* Determine safe offset distance for new chains. */
     Index offset = 0;
-    for (auto const& [ix, chain]: chains) {
+    for (auto const &[ix, chain]: chains) {
         offset = max(offset, ix);
     }
 
     /* Insert the chains. */
-    for (auto const& [ix, chain]: model2.chains) {
+    for (auto const &[ix, chain]: model2.chains) {
         chains[offset + ix] = chain;
     }
 
@@ -27,22 +27,22 @@ Model Model::operator+(const Model &model2) const {
     return sum;
 }
 
-void Model::apply(RealAffine3 const& aff) {
-    for (auto& [name, chain]: chains) {
+void Model::apply(RealAffine3 const &aff) {
+    for (auto &[name, chain]: chains) {
         chain.apply(aff);
     }
 }
 
 void Model::deriveContactsFromCaAtoms(const Parameters &parameters) {
-    for (auto const& [i1, chain1]: chains) {
+    for (auto const &[i1, chain1]: chains) {
         auto nresidues1 = chain1.residues.size();
-        for (auto const& [i2, chain2]: chains) {
+        for (auto const &[i2, chain2]: chains) {
             auto nresidues2 = chain2.residues.size();
             for (Index j1 = 0; j1 < nresidues1; ++j1) {
-                auto& v1 = chain1.positions.col(j1);
+                auto &v1 = chain1.positions.col(j1);
                 Index j2 = (i1 == i2 ? j1 + 3 : 0);
                 for (; j2 < nresidues2; ++j2) {
-                    auto& v2 = chain2.positions.col(j2);
+                    auto &v2 = chain2.positions.col(j2);
                     auto dist = (v2 - v1).norm();
                     if (dist < parameters.nativeContactCutoff) {
                         contacts.push_back((Contact) {

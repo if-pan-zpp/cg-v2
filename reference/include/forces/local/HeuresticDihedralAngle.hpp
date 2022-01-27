@@ -21,7 +21,9 @@ namespace cg::reference {
         Params params;
 
     public:
-        HeuresticDihedralAngle(PseudoAtoms const& pseudoAtoms, NativeStructure const& ns, Params params);
+        HeuresticDihedralAngle(PseudoAtoms const &pseudoAtoms,
+                               NativeStructure const &ns,
+                               Params params);
 
         void compute(Real &energy, Reals3 &forces) override;
     };

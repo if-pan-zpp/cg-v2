@@ -15,14 +15,14 @@ ContactMapFile::ContactMapFile(istream &file) {
     for (Index i = 0; i < ncontacts; ++i) {
         /* Residue indices are given 1-indexed; we convert them to 0-indexed.
          * Also, we add the necessary offset. */
-        auto& [res1, res2] = ns.contacts[i].residues;
+        auto &[res1, res2] = ns.contacts[i].residues;
         file >> res1;
         res1 -= 1;
         file >> res2;
         res2 -= 1;
 
         /* Bond distance is given in 5 Angstroms, per README.txt */
-        auto& dist = ns.contacts[i].distance;
+        auto &dist = ns.contacts[i].distance;
         file >> dist;
         dist *= 5.0 * angstrom;
     }
@@ -36,7 +36,7 @@ ContactMapFile::ContactMapFile(istream &file) {
     }
 }
 
-ContactMapFile::ContactMapFile(std::filesystem::path const& path) {
+ContactMapFile::ContactMapFile(std::filesystem::path const &path) {
     auto filestream = ifstream(path);
     *this = ContactMapFile(filestream);
 }

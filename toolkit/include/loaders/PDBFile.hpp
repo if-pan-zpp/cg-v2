@@ -15,8 +15,8 @@ namespace cg::toolkit {
         /* Read a PDB file from a given stream. If relevant CRYST1
          * field is present.
          * Note: figure out what lunwrap does in cg.f */
-        explicit PDBFile(std::istream& file);
-        explicit PDBFile(std::filesystem::path const& path);
+        explicit PDBFile(std::istream &file);
+        explicit PDBFile(std::filesystem::path const &path);
 
         FullModel fullModel;
         std::optional<Real3> cryst1;

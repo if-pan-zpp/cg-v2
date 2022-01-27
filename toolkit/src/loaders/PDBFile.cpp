@@ -89,7 +89,7 @@ PDBFile::PDBFile(istream &file) {
                 throw runtime_error("PDB - incorrect residue order");
             if (residueSeqNum == chain.size())
                 chain.emplace_back();
-            auto& residue = chain[residueSeqNum];
+            auto &residue = chain[residueSeqNum];
 
             /* Insert the atom. */
             residue.type = residueName;

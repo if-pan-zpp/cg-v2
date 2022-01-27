@@ -38,7 +38,7 @@ ParameterFile::ParameterFile(std::istream &file, bool loadMjMatrix) {
     }
     for (auto amino_acid1: AminoAcid::allCodes) {
         for (auto amino_acid2: AminoAcid::allCodes) {
-            auto& loc = parameters.bondAngleParams[{amino_acid1, amino_acid2}];
+            auto &loc = parameters.bondAngleParams[{amino_acid1, amino_acid2}];
             if (amino_acid1 != 'G' && amino_acid1 != 'P')
                 amino_acid1 = 'X';
             if (amino_acid2 != 'G' && amino_acid2 != 'P')
@@ -60,7 +60,7 @@ ParameterFile::ParameterFile(std::istream &file, bool loadMjMatrix) {
     }
     for (auto aminoAcid1: AminoAcid::allCodes) {
         for (auto aminoAcid2: AminoAcid::allCodes) {
-            auto& loc = parameters.dihedralAngleParams[{aminoAcid1, aminoAcid2}];
+            auto &loc = parameters.dihedralAngleParams[{aminoAcid1, aminoAcid2}];
             if (aminoAcid1 != 'G' && aminoAcid1 != 'P')
                 aminoAcid1 = 'X';
             if (aminoAcid2 != 'G' && aminoAcid2 != 'P')

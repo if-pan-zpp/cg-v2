@@ -4,6 +4,7 @@
 namespace cg::reference {
     class Integrator {
     public:
-        virtual void step(int nsteps) = 0;
+        virtual void init(Reals3 &forces) = 0;
+        virtual void step(Reals3 &forces) = 0;
     };
 }

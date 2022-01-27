@@ -19,6 +19,8 @@ namespace cg::toolkit {
     using Real3 = Vec<3, Real>;
     using Real3List = VecList<3, Real>;
     using RealAffine3 = Eigen::Transform<Real, 3, Eigen::Affine>;
+    using Real3_3 = Eigen::Matrix<Real, 3, 3>;
+    using Reals3_3 = std::vector<Real3_3>;
 
     /* Note: in 3.4 version of Eigen, there is better indexing facilities. */
     using Index = unsigned;
@@ -28,7 +30,7 @@ namespace cg::toolkit {
     /* List resizing shorthand; technically the list is a matrix,
        so it's not as straightforward as we'd wish. Also,
        Note: this invalidates the list. */
-    inline void resizeVectorList(Real3List& list, size_t n) {
+    inline void resizeVectorList(Real3List &list, size_t n) {
         list.resize(Eigen::NoChange_t(), n);
     }
 }

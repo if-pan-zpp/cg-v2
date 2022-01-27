@@ -8,17 +8,19 @@ namespace cg::reference {
     using namespace cg::toolkit;
 
     class HarmonicTethers: public Force {
-    private:
-        PseudoAtoms const* pseudoAtoms;
-        NativeStructure const* ns;
-
     public:
-        Real default_dist0 = 3.8*angstrom;
-        Real k1 = 100.0*eps/(angstrom*angstrom);
-        Real k3 = 0.0;
+        Real H1 = 50.0*eps/(angstrom*angstrom);
+        Real H2 = 0.0;
+        Real force_cap = 200.0*eps/angstrom;
 
-        HarmonicTethers(PseudoAtoms const& pseudoAtoms, NativeStructure const& ns);
+        HarmonicTethers(PseudoAtoms const &pseudoAtoms, NativeStructure const &ns);
 
-        void compute(Real &energy, Reals3 &forces) override;
+        void compute(Reals3 &forces) override;
+        void dumpResults(Results &results) override;
+
+    private:
+        PseudoAtoms const &pseudoAtoms;
+        NativeStructure const &ns;
+        Real energy;
     };
 }

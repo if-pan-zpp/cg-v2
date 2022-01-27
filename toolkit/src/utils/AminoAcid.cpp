@@ -76,6 +76,6 @@ AminoAcid::operator std::string() const {
     return name;
 }
 
-bool AminoAcid::operator==(AminoAcid const& aminoAcid2) const {
+bool AminoAcid::operator==(AminoAcid const &aminoAcid2) const {
     return code == aminoAcid2.code;
 }

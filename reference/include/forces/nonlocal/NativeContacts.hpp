@@ -2,21 +2,40 @@
 #include "forces/Force.hpp"
 #include "data/NativeStructure.hpp"
 #include "data/Topology.hpp"
+#include "utils/Units.hpp"
+using std::vector;
 
 namespace cg::reference {
+    using namespace cg::toolkit;
+
     /* CPC14.pdf, 4.1
      * Note: here we may forego neighborhood lists */
     class NativeContacts: public Force {
-    private:
-        NativeStructure const* ns;
-        Topology const* top;
-
     public:
-        Real depth = 1.0;
+        NativeContacts(PseudoAtoms const &pseudoAtoms,
+                       NativeStructure const &ns,
+                       Topology const &top,
+                       Real cutoff);
 
-        NativeContacts(NativeStructure const& ns, Topology const& top);
+        void compute(Reals3 &forces) override;
+        void dumpResults(Results &results) override;
 
-        void compute(Real &energy, Reals3 &forces) override;
+    private:
+        PseudoAtoms const &pseudoAtoms;
+        Topology const &top;
+
+        const Real depth = 1. * eps;
+        const Real force_cap = 200. * eps/angstrom;
+        const Real sq_cutoff;
+
+        struct Contact {
+            unsigned i, j;
+            Real sigma;
+        };
+        vector<Contact> contacts;
+
+        Real energy;
+        unsigned activeContacts;
     };
 }
 

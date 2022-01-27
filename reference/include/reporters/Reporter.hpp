@@ -3,6 +3,6 @@
 namespace cg::reference {
     class Reporter {
     public:
-        virtual void report() = 0;
+        virtual void report(int step) = 0;
     };
 }

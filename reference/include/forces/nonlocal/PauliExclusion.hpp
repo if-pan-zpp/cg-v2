@@ -11,16 +11,24 @@ namespace cg::reference {
      * for all relevant pairs, as opposed to only those not in
      * contact. */
     class PauliExclusion: public Force {
-    private:
-        Topology const* top;
-        PseudoAtoms const* pseudoAtoms;
-        Neighborhood const* excludedPairs;
-        Real excludedRadius;
-
     public:
-        PauliExclusion(PseudoAtoms const& pseudoAtoms, Topology const& top,
-            Real excludedRadius = 5.0*angstrom);
+        PauliExclusion(PseudoAtoms const &pseudoAtoms,
+                       Topology const &top,
+                       Neighborhood const &verletList,
+                       Real excludedRadius = 5.0*angstrom);
 
-        void compute(Real &energy, Reals3 &forces) override;
+        void compute(Reals3 &forces) override;
+        void dumpResults(Results &results) override;
+
+    private:
+        Topology const &top;
+        PseudoAtoms const &pseudoAtoms;
+        Neighborhood const &verletList;
+
+        const Real excludedRadius;
+        const Real sq_cutoff; // = excludedRadius ^ 2
+        const Real force_cap = 200.0 * eps / angstrom;
+
+        Real energy;
     };
 }
